@@ -1,0 +1,9 @@
+{
+  "version": 10,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 31,
+    "patch": 0
+  },
+  "include": ["Presets/clang.json"]
+}
