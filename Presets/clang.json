@@ -6,6 +6,12 @@
     {
       "name": "default::clang",
       "inherits": ["default"],
+      "cacheVariables": {
+        "USE_CLANG": {
+          "type": "BOOL",
+          "value": "ON"
+        }
+      },
       "environment": {
         "CC": "clang",
         "CXX": "clang++"
