@@ -24,6 +24,18 @@
     {
       "name": "debug",
       "inherits": ["default", "common::debug"]
+    },
+    {
+      "name": "common::release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      },
+      "binaryDir": "${sourceDir}/build/Release-${hostSystemName}",
+      "hidden": true
+    },
+    {
+      "name": "debug",
+      "inherits": ["default", "common::release"]
     }
   ]
 }

@@ -22,6 +22,11 @@
       "name": "debug::clang",
       "inherits": ["common::debug", "default::clang"],
       "binaryDir": "${sourceDir}/build/Debug-${hostSystemName}-clang"
+    },
+    {
+      "name": "release::clang",
+      "inherits": ["common::release", "default::clang"],
+      "binaryDir": "${sourceDir}/build/Release-${hostSystemName}-clang"
     }
   ]
 }
