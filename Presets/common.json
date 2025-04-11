@@ -3,7 +3,7 @@
   "version": 10,
   "configurePresets": [
     {
-      "name": "default",
+      "name": "common",
       "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": {
@@ -23,7 +23,7 @@
     },
     {
       "name": "debug",
-      "inherits": ["default", "common::debug"]
+      "inherits": ["common", "common::debug"]
     },
     {
       "name": "common::release",
@@ -34,8 +34,8 @@
       "hidden": true
     },
     {
-      "name": "debug",
-      "inherits": ["default", "common::release"]
+      "name": "release",
+      "inherits": ["common", "common::release"]
     }
   ]
 }
