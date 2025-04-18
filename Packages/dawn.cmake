@@ -1,4 +1,4 @@
-set(DAWN_TAG main)
+set(DAWN_TAG chromium/7132)
 set(DAWN_URL https://dawn.googlesource.com/dawn)
 
 set(DAWN_FETCH_DEPENDENCIES OFF)
