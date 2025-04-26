@@ -12,36 +12,86 @@ set(CACHE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${CACHE_DIR_RELATIVE})
 find_package(Git REQUIRED)
 include(FetchContent)
 
+function(_add_sources target)
+set(options)
+set(oneValueArgs)
+set(multiValueArgs PRIVATE PUBLIC INTERFACE)
+cmake_parse_arguments(_ "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+target_sources(${target}
+  PRIVATE ${__PRIVATE}
+  PUBLIC ${__PUBLIC}
+  INTERFACE ${__INTERFACE}
+)
+endfunction()
+
+
+# Shorthand for add_executable(name)
+macro(EXE name)
+  add_executable(${name} WIN32)
+endmacro()
+
+# Shorthand for add_library(name)
+macro(LIB name)
+  add_library(${name})
+  _add_sources(${name} ${ARGN})
+endmacro()
+
+# Shorthand for add_library(name SHARED)
+macro(DLL name)
+  add_library(${name} SHARED)
+  _add_sources(${name} ${ARGN})
+endmacro()
+
+# Shorthand for add_library(name STATIC)
+macro(STATIC name)
+  add_library(${name} STATIC)
+  _add_sources(${name} ${ARGN})
+endmacro()
+
+# Shorthand for add_library(name INTERFACE)
+macro(INTERFACE name)
+  add_library(${name} INTERFACE)
+  _add_sources(${name} ${ARGN})
+endmacro()
+
+# Shorthand for add_library(name MODULE)
+macro(MODULE name)
+  add_library(${name} MODULE)
+  _add_sources(${name} ${ARGN})
+endmacro()
+
+
 function(DeclareDependency NAME URL TAG)
   set(options)
   set(oneValueArgs)
   set(multiValueArgs PATCH SUBMODULES PRELOAD)
-  cmake_parse_arguments(FUNC_DDEP "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+  cmake_parse_arguments(_ "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
   Message(STATUS "Adding Dependency: ${NAME}")
 
   # This prevents add_subdirectory
   # and alows to add dependencies beforehand
-  if(FUNC_DDEP_PRELOAD)
+  if(__PRELOAD)
     set(SOURCE_SUBDIR ${CACHE_DIR_RELATIVE}/${NAME}Preload)
     set(_LIST ${FetchList_NeedsPreload})
     list(APPEND _LIST ${NAME})
     set(FetchList_NeedsPreload ${_LIST} PARENT_SCOPE)
-    set(FetchList_NeedsPreload_${NAME} ${FUNC_DDEP_PRELOAD} PARENT_SCOPE)
+    set(FetchList_NeedsPreload_${NAME} ${__PRELOAD} PARENT_SCOPE)
   endif()
 
   FetchContent_Declare(${NAME}
     GIT_REPOSITORY    ${URL}
     GIT_TAG           ${TAG}
     GIT_SHALLOW       TRUE
-    GIT_SUBMODULES    "${FUNC_DDEP_SUBMODULES}"
+    GIT_SUBMODULES    "${__SUBMODULES}"
     GIT_PROGRESS      TRUE
     EXCLUDE_FROM_ALL  TRUE
     BINARY_DIR        ${NAME}
     PREFIX            ${CACHE_DIR}/.prefix/${NAME}
     SOURCE_DIR        ${CACHE_DIR}/${NAME}
     SUBBUILD_DIR      ${CACHE_DIR}/.prefix/${NAME}/sub
-    PATCH_COMMAND     ${FUNC_DDEP_PATCH}
+    PATCH_COMMAND     ${__PATCH}
     SOURCE_SUBDIR     ${SOURCE_SUBDIR}
   )
 
@@ -99,9 +149,9 @@ function(AppendPath)
   set(oneValueArgs PATCH)
   set(multiValueArgs AFTER BEFORE)
 
-  cmake_parse_arguments(FUNC_APATH "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+  cmake_parse_arguments(_ "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-  set(_PATH ${FUNC_APATH_BEFORE} $ENV{PATH} ${FUNC_APATH_AFTER})
+  set(_PATH ${__BEFORE} $ENV{PATH} ${__AFTER})
   cmake_path(CONVERT "${_PATH}" TO_NATIVE_PATH_LIST _PATH NORMALIZE)
   set(ENV{PATH} "${_PATH}") 
 endfunction()
