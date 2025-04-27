@@ -19,8 +19,8 @@ set(multiValueArgs PRIVATE PUBLIC INTERFACE)
 cmake_parse_arguments(_ "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
 target_sources(${target}
+  PUBLIC ${__PUBLIC}${__UNPARSED_ARGUMENTS}
   PRIVATE ${__PRIVATE}
-  PUBLIC ${__PUBLIC}
   INTERFACE ${__INTERFACE}
 )
 endfunction()
@@ -29,6 +29,7 @@ endfunction()
 # Shorthand for add_executable(name)
 macro(EXE name)
   add_executable(${name} WIN32)
+  _add_sources(${name} ${ARGN})
 endmacro()
 
 # Shorthand for add_library(name)
