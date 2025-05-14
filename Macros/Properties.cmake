@@ -1,10 +1,10 @@
 function(TargetName target outVar)
     get_target_property(name ${target} OUTPUT_NAME)
 
-    if(name)
-        set(${outVar} ${name} PARENT_SCOPE)
-    else()
+    if(name STREQUAL "name-NOTFOUND")
         set(${outVar} ${target} PARENT_SCOPE)
+    else()
+        set(${outVar} ${name} PARENT_SCOPE)
     endif()
 endfunction()
 
@@ -24,10 +24,10 @@ function(TargetPrefix target outVar)
     endif()
 
     get_target_property(prefix ${target} PREFIX)
-    if(prefix)
-        set(${outVar} ${prefix} PARENT_SCOPE)
-    else()
+    if(prefix STREQUAL "prefix-NOTFOUND")
         set(${outVar} ${default} PARENT_SCOPE)
+    else()
+        set(${outVar} ${prefix} PARENT_SCOPE)
     endif()
 endfunction()
 
@@ -47,10 +47,11 @@ function(TargetSuffix target outVar)
     endif()
 
     get_target_property(suffix ${target} SUFFIX)
-    if(suffix)
-        set(${outVar} ${suffix} PARENT_SCOPE)
-    else()
+    
+    if(suffix STREQUAL "suffix-NOTFOUND")
         set(${outVar} ${default} PARENT_SCOPE)
+    else()
+        set(${outVar} ${suffix} PARENT_SCOPE)
     endif()
 endfunction()
 
