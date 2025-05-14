@@ -1,8 +1,10 @@
 list(APPEND CMAKE_MODULE_PATH
     ${CMAKE_CURRENT_LIST_DIR}
     ${CMAKE_CURRENT_LIST_DIR}/Packages
+    ${CMAKE_CURRENT_LIST_DIR}/Macros
 )
 include(Macros)
+include(Properties)
 include(experimental)
 
 if(USE_CLANG AND LINUX)
