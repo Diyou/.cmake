@@ -62,6 +62,9 @@ macro(MODULE name)
   _add_sources(${name} ${ARGN})
 endmacro()
 
+macro(ALIAS target alias)
+  add_library(${alias} ALIAS ${target})
+endmacro()
 
 function(DeclareDependency NAME URL TAG)
   set(options)
