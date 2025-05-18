@@ -6,6 +6,7 @@ list(APPEND CMAKE_MODULE_PATH
 include(Macros)
 include(Properties)
 include(experimental)
+include(Finalize)
 
 if(USE_CLANG AND LINUX)
     string(APPEND CMAKE_CXX_FLAGS " -stdlib=libc++ ")
