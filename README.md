@@ -5,6 +5,10 @@ CMake dotfiles for common c++ projects including
 - Presets for specific toolchains (native/clang/emscripten)
 - Git-based Package Management
 
+### Requirement
+
+- cmake > 4.0.0
+
 ### Usage
 
 Add this repository as a git-submodule and use `include(.cmake/Setup.cmake)` before `project()` in the parent project
