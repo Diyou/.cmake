@@ -178,9 +178,9 @@ endfunction()
 
 function(Configure FILE_IN FILE_OUT)
 set(COPY_REMARK "\
-# Do not edit!
-# This file was auto-generated
-# Source: ${FILE_IN}
+#  Do not edit!
+#  This file was auto-generated
+#  Source: ${FILE_IN}
 ")
 configure_file(${FILE_IN} ${FILE_OUT} @ONLY NEWLINE_STYLE UNIX)
 endfunction()

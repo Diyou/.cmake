@@ -1,0 +1,21 @@
+{
+  /*
+@COPY_REMARK@*/
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug with .cmake",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${command:cmake.launchTargetPath}",
+      "args": ["@DEBUG_ARGS@"],
+      "cwd": "${command:cmake.getLaunchTargetDirectory}",
+      "env": {
+        "VK_LOADER_DEBUG": "@VK_LOADER_DEBUG@",
+        "@VK_LAYER_TOGGLE@": "1",
+        "VK_ADD_IMPLICIT_LAYER_PATH": "@VK_ADD_IMPLICIT_LAYER_PATH@"
+      },
+      "initCommands": ["settings set target.process.stop-on-exec false"]
+    }
+  ]
+}
