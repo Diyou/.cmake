@@ -6,6 +6,7 @@ CMake dotfiles for common c++ projects including
 - Git-based Package Management
 - c++20 Utils module
   - ```cmake
+    include(C++Utils)
     target_link_libraries(<TARGET> dotfiles::Utils)
     ```
   - ```c++
