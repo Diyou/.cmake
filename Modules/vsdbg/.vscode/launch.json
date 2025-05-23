@@ -4,7 +4,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug with .cmake",
+      "name": "Debug with vsdbg",
       "type": "cppvsdbg",
       "request": "launch",
       "program": "${command:cmake.launchTargetPath}",
@@ -27,7 +27,7 @@
           "value": "@VK_ADD_IMPLICIT_LAYER_PATH@"
         }
       ],
-      "externalConsole": false,
+      "console": "integratedTerminal",
       "preLaunchTask": "CMake: build"
     }
   ]
