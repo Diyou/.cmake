@@ -8,7 +8,9 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${command:cmake.launchTargetPath}",
-      "args": ["@DEBUG_ARGS@"],
+      "args": [
+        "@DEBUG_ARGS@"
+      ],
       "stopAtEntry": false,
       "cwd": "${command:cmake.getLaunchTargetDirectory}",
       "environment": [
@@ -38,7 +40,8 @@
           "text": "-gdb-set disassembly-flavor intel",
           "ignoreFailures": true
         }
-      ]
+      ],
+      "preLaunchTask": "CMake: build"
     }
   ]
 }

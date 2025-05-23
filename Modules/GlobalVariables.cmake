@@ -1,3 +1,5 @@
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} CACHE STRING "CMake Module directories") 
+
 set(DOTCMAKE_CACHE_DIR ${CMAKE_SOURCE_DIR}/.cache CACHE STRING "Cache Directory")
 
 # Enable libc++ on Linux
