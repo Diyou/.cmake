@@ -7,7 +7,12 @@
       "name": "common::clang",
       "inherits": ["common"],
       "toolchainFile": "${fileDir}/../ToolChains/clang.cmake",
-      "hidden": true
+      "hidden": true,
+      "condition": {
+        "type": "inList",
+        "string": "${hostSystemName}",
+        "list": ["Linux", "Windows"]
+      }
     },
     {
       "name": "debug::clang",
