@@ -9,8 +9,13 @@
         "CMAKE_EXPORT_COMPILE_COMMANDS": {
           "type": "BOOL",
           "value": "ON"
+        },
+        "DOTCMAKE_CONFIGURE_IDE": {
+          "type": "BOOL",
+          "value": "ON"
         }
       },
+      "toolchainFile": "${fileDir}/../ToolChains/common.cmake",
       "hidden": true
     },
     {

@@ -1,6 +1,9 @@
-@COPY_REMARK@
+#  Do not edit!
+#  This file was auto-generated
+#  Source: /mnt/e/Workspace/VkLayerTemplate/.cmake/Modules/../.clangd
+
 CompileFlags:
-  CompilationDatabase: '@CMAKE_BINARY_DIR@'  
+  CompilationDatabase: '/mnt/e/Workspace/VkLayerTemplate/build/Debug-Linux-clang'  
 
 Hover:
   ShowAKA: Yes
