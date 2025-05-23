@@ -1,6 +1,6 @@
 module;
 
-export module cmake.Utils:Compiler;
+export module dotfiles.Utils:Compiler;
 
 namespace cmake {
 export struct Compiler

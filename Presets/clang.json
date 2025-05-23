@@ -6,16 +6,7 @@
     {
       "name": "common::clang",
       "inherits": ["common"],
-      "cacheVariables": {
-        "USE_CLANG": {
-          "type": "BOOL",
-          "value": "ON"
-        }
-      },
-      "environment": {
-        "CC": "clang",
-        "CXX": "clang++"
-      },
+      "toolchainFile": "${fileDir}/../ToolChains/clang.cmake",
       "hidden": true
     },
     {

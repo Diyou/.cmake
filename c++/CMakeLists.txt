@@ -4,6 +4,8 @@ STATIC(Utils PUBLIC
     FILES
         Utils/Utils.c++
         Utils/Compiler.c++
+        Utils/Formatters.c++
+        Utils/GetFunctionName.c++
 )
 
-add_library(cmake::Utils ALIAS Utils)
+add_library(dotfiles::Utils ALIAS Utils)

@@ -2,5 +2,24 @@
   "$schema": "https://cmake.org/cmake/help/latest/_downloads/3e2d73bff478d88a7de0de736ba5e361/schema.json",
   "version": 10,
   "include": ["common.json"],
-  "configurePresets": []
+  "configurePresets": [
+    {
+      "name": "common::emscripten",
+      "inherits": ["common"],
+      "toolchainFile": "${fileDir}/../ToolChains/emscripten.cmake",
+      "hidden": true
+    },
+    {
+      "name": "debug::emscripten",
+      "inherits": ["common::debug", "common::emscripten"],
+      "binaryDir": "${sourceDir}/build/Debug-emscripten",
+      "hidden": true
+    },
+    {
+      "name": "release::emscripten",
+      "inherits": ["common::release", "common::emscripten"],
+      "binaryDir": "${sourceDir}/build/Release-emscripten",
+      "hidden": true
+    }
+  ]
 }

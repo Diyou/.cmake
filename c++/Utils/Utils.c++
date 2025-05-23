@@ -1,5 +1,7 @@
 module;
 
-export module cmake.Utils;
+export module dotfiles.Utils;
 
 export import :Compiler;
+export import :Formatters;
+export import :GetFunctionName;

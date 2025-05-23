@@ -5,10 +5,18 @@ CMake dotfiles for common c++ projects including
 - Presets for specific toolchains (native/clang/emscripten)
 - Git-based Package Management
 - c++20 Utils module
+  - ```cmake
+    target_link_libraries(<TARGET> dotfiles::Utils)
+    ```
+  - ```c++
+    import dotfiles.Utils;
+    ```
 
 ### Requirement
 
 - cmake > 4.0.0
+  - gcc > 15
+  - clang > 19
 
 ### Usage
 
