@@ -1,3 +1,5 @@
 module;
 
-export module DOTCMAKE.Utils;
+export module cmake.Utils;
+
+export import :Compiler;
