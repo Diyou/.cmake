@@ -4,6 +4,8 @@ CMake dotfiles for common c++ projects including
 
 - Presets for specific toolchains (native/clang/emscripten)
 - Git-based Package Management
+- IDE integration
+  - vscode
 - c++20 Utils module
   - cmake:
     ```cmake

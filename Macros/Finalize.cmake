@@ -2,7 +2,6 @@
 
 macro(ConfigureVScode)
 list(JOIN DEBUG_ARGS [[", "]] DEBUG_ARGS)
-
 if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
     Configure(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/lldb/.vscode/launch.json ${CMAKE_SOURCE_DIR}/.vscode/launch.json)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
@@ -21,7 +20,7 @@ function(Finalize)
     )
     # Configure IDEs
     if(DOTCMAKE_CONFIGURE_IDE)
-        if(DEFINED $ENV{VSCODE_CLI})
+        if(DEFINED ENV{VSCODE_CLI}) 
             ConfigureVScode()
         endif()
     endif()
@@ -31,8 +30,4 @@ function(Finalize)
     endif()
 endfunction()
 
-if(DEFINED DOTCMAKE_SETUP)
-    cmake_language(DEFER CALL Finalize)
-else()
-    set(DOTCMAKE_SETUP TRUE CACHE INTERNAL "Prevents Finalizing multiple times on first configuration")
-endif()
+cmake_language(DEFER CALL Finalize)

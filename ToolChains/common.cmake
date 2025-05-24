@@ -1,6 +1,14 @@
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_EXTENSIONS ON)
+
 if(${PROJECT_NAME} STREQUAL CMAKE_TRY_COMPILE)
     return()
 endif()
+
+if(DEFINED DOTCMAKE_RUN_ONCE)
+    return()
+endif()
+set(DOTCMAKE_RUN_ONCE ON)
 
 list(APPEND CMAKE_MODULE_PATH
     ${CMAKE_CURRENT_LIST_DIR}/../Packages
@@ -17,15 +25,11 @@ else()
     set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "a9e1cf81-9932-4810-974b-6eccaf14e457")
 endif()
 
-set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 set(CMAKE_CXX_MODULE_STD ON)
-set(CMAKE_CXX_EXTENSIONS ON)
 
-# Add default Modules
-include(Macros)
-include(Properties)
-include(Debug)
-
-#Run finalize after project is configured
-include(${CMAKE_CURRENT_LIST_DIR}/../Modules/Finalize.cmake)
+# Include all macros
+file(GLOB macros ${CMAKE_CURRENT_LIST_DIR}/../Macros/*.cmake)
+foreach(macro ${macros})
+    include(${macro})
+endforeach()
