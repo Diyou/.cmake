@@ -1,6 +1,6 @@
 module;
 
-export module dotfiles.Utils;
+export module dotcmake;
 
 export import :Compiler;
 export import :Formatters;

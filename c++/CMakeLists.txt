@@ -1,4 +1,4 @@
-STATIC(Utils PUBLIC
+STATIC(.cmake PUBLIC
     FILE_SET module_files
     TYPE CXX_MODULES
     FILES
@@ -8,4 +8,4 @@ STATIC(Utils PUBLIC
         Utils/GetFunctionName.c++
 )
 
-add_library(dotfiles::Utils ALIAS Utils)
+add_library(.cmake::Utils ALIAS .cmake)

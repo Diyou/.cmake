@@ -1,6 +1,6 @@
 module;
 
-export module dotfiles.Utils:Formatters;
+export module dotcmake:Formatters;
 
 import std;
 

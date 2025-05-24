@@ -1,14 +1,13 @@
-# This file is included as part of the toolchain file (ToolChains/common.cmake)
-
 macro(ConfigureVScode)
-list(JOIN DEBUG_ARGS [[", "]] DEBUG_ARGS)
-if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
-    Configure(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/lldb/.vscode/launch.json ${CMAKE_SOURCE_DIR}/.vscode/launch.json)
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-    Configure(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/gdb/.vscode/launch.json ${CMAKE_SOURCE_DIR}/.vscode/launch.json)
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL MSVC)
-    Configure(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/vsdbg/.vscode/launch.json ${CMAKE_SOURCE_DIR}/.vscode/launch.json)
-endif() 
+    list(JOIN DEBUG_ARGS [[", "]] DEBUG_ARGS)
+
+    if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
+        Configure(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/lldb/.vscode/launch.json ${CMAKE_SOURCE_DIR}/.vscode/launch.json)
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+        Configure(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/gdb/.vscode/launch.json ${CMAKE_SOURCE_DIR}/.vscode/launch.json)
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL MSVC)
+        Configure(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/vsdbg/.vscode/launch.json ${CMAKE_SOURCE_DIR}/.vscode/launch.json)
+    endif() 
 endmacro()
 
 function(Finalize)

@@ -1,8 +1,8 @@
 module;
 
-export module dotfiles.Utils:Compiler;
+export module dotcmake:Compiler;
 
-namespace cmake {
+namespace dotcmake {
 export struct Compiler
 {
 #if defined(__GNUC__) && !defined(__clang__)

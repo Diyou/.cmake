@@ -10,11 +10,11 @@ CMake dotfiles for common c++ projects including
   - cmake:
     ```cmake
     include(C++Utils)
-    target_link_libraries(<TARGET> dotfiles::Utils)
+    target_link_libraries(<TARGET> .cmake::Utils)
     ```
   - c++:
     ```c++
-    import dotfiles.Utils;
+    import dotcmake;;
     ```
 
 ### Requirement

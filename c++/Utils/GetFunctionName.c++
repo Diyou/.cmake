@@ -1,6 +1,6 @@
 module;
 
-export module dotfiles.Utils:GetFunctionName;
+export module dotcmake:GetFunctionName;
 
 import :Compiler;
 import std;
@@ -36,7 +36,7 @@ constexpr auto
 GetFunctionView()
 {
   constexpr string_view match_left =
-    cmake::Compiler::GCC ? "[with auto T = " : "[T = &";
+    dotcmake::Compiler::GCC ? "[with auto T = " : "[T = &";
   constexpr string_view match_right = ";]>";
   constexpr string_view match_ns    = "::";
 
@@ -55,7 +55,7 @@ to_array(string_view const &view)
   return buffer;
 }
 
-namespace cmake {
+namespace dotcmake {
 export template< auto Function >
 constexpr string_view
 GetFunctionName()

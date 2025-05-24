@@ -17,7 +17,8 @@
       "initCommands": [
         "settings set target.process.stop-on-exec false"
       ],
-      "preLaunchTask": "CMake: build"
+      "expressions": "native",
+      "preLaunchTask": "CMake: build",
     }
   ]
 }
