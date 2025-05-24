@@ -24,5 +24,26 @@
       "inherits": ["common::release", "common::clang"],
       "binaryDir": "${sourceDir}/build/Release-${hostSystemName}-clang"
     }
+  ],
+  "buildPresets": [
+    {
+      "name": "common::clang",
+      "hidden": true,
+      "condition": {
+        "type": "inList",
+        "string": "${hostSystemName}",
+        "list": ["Linux", "Windows"]
+      }
+    },
+    {
+      "name": "debug::clang",
+      "inherits": ["common::clang"],
+      "configurePreset": "debug::clang"
+    },
+    {
+      "name": "release::clang",
+      "inherits": ["common::clang"],
+      "configurePreset": "release::clang"
+    }
   ]
 }

@@ -7,19 +7,43 @@
       "name": "common::emscripten",
       "inherits": ["common"],
       "toolchainFile": "${fileDir}/../ToolChains/emscripten.cmake",
-      "hidden": true
+      "hidden": true,
+      "condition": {
+        "type": "notEquals",
+        "lhs": "$env{EMSDK}",
+        "rhs": ""
+      }
     },
     {
       "name": "debug::emscripten",
       "inherits": ["common::debug", "common::emscripten"],
-      "binaryDir": "${sourceDir}/build/Debug-emscripten",
-      "hidden": true
+      "binaryDir": "${sourceDir}/build/Debug-emscripten"
     },
     {
       "name": "release::emscripten",
       "inherits": ["common::release", "common::emscripten"],
-      "binaryDir": "${sourceDir}/build/Release-emscripten",
-      "hidden": true
+      "binaryDir": "${sourceDir}/build/Release-emscripten"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "common::emscripten",
+      "hidden": true,
+      "condition": {
+        "type": "notEquals",
+        "lhs": "$env{EMSDK}",
+        "rhs": ""
+      }
+    },
+    {
+      "name": "debug::emscripten",
+      "inherits": ["common::emscripten"],
+      "configurePreset": "debug::emscripten"
+    },
+    {
+      "name": "release::emscripten",
+      "inherits": ["common::emscripten"],
+      "configurePreset": "release::emscripten"
     }
   ]
 }

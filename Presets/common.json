@@ -42,5 +42,18 @@
       "name": "release",
       "inherits": ["common", "common::release"]
     }
+  ],
+  "buildPresets": [
+    { "name": "common", "hidden": true },
+    {
+      "name": "debug",
+      "inherits": ["common"],
+      "configurePreset": "debug"
+    },
+    {
+      "name": "release",
+      "inherits": ["common"],
+      "configurePreset": "release"
+    }
   ]
 }

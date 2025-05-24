@@ -4,7 +4,7 @@ list(APPEND CMAKE_MODULE_PATH
 )
 
 # Automatically configures ide files (e.g .vscode/launch.json)
-option(DOTCMAKE_CONFIGURE_IDE OFF)
+option(DOTCMAKE_CONFIGURE_IDE "Configure IDE on Finalizing configuration" OFF)
 
 include(GlobalVariables)
 include(Macros)

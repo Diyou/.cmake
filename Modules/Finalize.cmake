@@ -12,10 +12,6 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL MSVC)
 endif() 
 endmacro()
 
-macro(CopyClangD)
-    Configure(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/.clangd ${CMAKE_SOURCE_DIR}/.clangd)
-endmacro()
-
 function(Finalize)
     # Generate env file for debuggin
     list(JOIN DEBUG_ENV \n DEBUG_ENV)
@@ -24,13 +20,21 @@ function(Finalize)
         CONTENT "${DEBUG_ENV}"
     )
     # Configure IDEs
-    if(DOTCMAKE_CONFIGURE_IDE AND $ENV{VSCODE_CLI})
-        ConfigureVScode()
+    if(DOTCMAKE_CONFIGURE_IDE)
+        if(DEFINED $ENV{VSCODE_CLI})
+            ConfigureVScode()
+        endif()
     endif()
     # clangd support
     if(CMAKE_EXPORT_COMPILE_COMMANDS)
-        CopyClangD()
+        Configure(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/.clangd ${CMAKE_SOURCE_DIR}/.clangd)
     endif()
 endfunction()
 
-cmake_language(DEFER CALL Finalize)
+if(NOT ${PROJECT_NAME} STREQUAL CMAKE_TRY_COMPILE)
+    if(DEFINED DOTCMAKE_SETUP)
+        cmake_language(DEFER CALL Finalize)
+    else()
+        set(DOTCMAKE_SETUP TRUE CACHE INTERNAL "Prevents Finalizing multiple times on first configuration")
+    endif()
+endif()
