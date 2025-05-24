@@ -12,11 +12,7 @@
         "@DEBUG_ARGS@"
       ],
       "cwd": "${command:cmake.getLaunchTargetDirectory}",
-      "env": {
-        "VK_LOADER_DEBUG": "@VK_LOADER_DEBUG@",
-        "@VK_LAYER_TOGGLE@": "1",
-        "VK_ADD_IMPLICIT_LAYER_PATH": "@VK_ADD_IMPLICIT_LAYER_PATH@"
-      },
+      "envFile": "${command:cmake.buildDirectory}/debug.env",
       "terminal": "integrated",
       "initCommands": [
         "settings set target.process.stop-on-exec false"

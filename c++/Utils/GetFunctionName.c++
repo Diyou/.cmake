@@ -61,6 +61,7 @@ constexpr string_view
 GetFunctionName()
 {
   constexpr string_view name   = GetFunctionView< Function >();
+  // Adds 0 termination
   constexpr static auto buffer = to_array< name.size() >(name);
 
   static_assert(

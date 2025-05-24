@@ -13,20 +13,7 @@
       ],
       "stopAtEntry": false,
       "cwd": "${command:cmake.getLaunchTargetDirectory}",
-      "environment": [
-        {
-          "name": "@VK_LAYER_TOGGLE@",
-          "value": "1"
-        },
-        {
-          "name": "VK_LOADER_DEBUG",
-          "value": "@VK_LOADER_DEBUG@"
-        },
-        {
-          "name": "VK_ADD_IMPLICIT_LAYER_PATH",
-          "value": "@VK_ADD_IMPLICIT_LAYER_PATH@"
-        }
-      ],
+      "envFile": "${command:cmake.buildDirectory}/debug.env",
       "console": "integratedTerminal",
       "preLaunchTask": "CMake: build"
     }

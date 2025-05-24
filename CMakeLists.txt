@@ -10,3 +10,5 @@ include(GlobalVariables)
 include(Macros)
 include(Properties)
 include(experimental)
+
+include(Debug)

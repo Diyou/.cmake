@@ -1,6 +1,8 @@
 # This file is included as part of the toolchain file (ToolChains/common.cmake)
 
 macro(ConfigureVScode)
+list(JOIN DEBUG_ARGS [[", "]] DEBUG_ARGS)
+
 if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
     Configure(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/lldb/.vscode/launch.json ${CMAKE_SOURCE_DIR}/.vscode/launch.json)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
@@ -15,6 +17,13 @@ macro(CopyClangD)
 endmacro()
 
 function(Finalize)
+    # Generate env file for debuggin
+    list(JOIN DEBUG_ENV \n DEBUG_ENV)
+    file(GENERATE
+        OUTPUT ${CMAKE_BINARY_DIR}/debug.env
+        CONTENT "${DEBUG_ENV}"
+    )
+    # Configure IDEs
     if(DOTCMAKE_CONFIGURE_IDE AND $ENV{VSCODE_CLI})
         ConfigureVScode()
     endif()
