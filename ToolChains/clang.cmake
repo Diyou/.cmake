@@ -5,5 +5,5 @@ set(ENV{CXX} clang++)
 
 # Enable libc++ on Linux
 if(LINUX)
-    set(CMAKE_CXX_FLAGS " -stdlib=libc++ -fexperimental-library " CACHE STRING "C++ compiler flags")
+    set(CMAKE_CXX_FLAGS "-stdlib=libc++ -fexperimental-library")
 endif()
