@@ -1,0 +1,111 @@
+---
+Language: Cpp
+BasedOnStyle: Mozilla
+Standard: Latest
+ColumnLimit: 80
+UseTab: Never
+TabWidth: 2
+IndentWidth: 2
+IndentPPDirectives: AfterHash
+ConstructorInitializerIndentWidth: 0
+PackConstructorInitializers: Never
+LineEnding: LF
+KeepEmptyLines:
+  AtEndOfFile: false
+  AtStartOfBlock: false
+  AtStartOfFile: false
+MaxEmptyLinesToKeep: 1
+SeparateDefinitionBlocks: Always
+InsertNewlineAtEOF: true
+InsertBraces: true
+SpacesInAngles: true
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+  AlignCompound: true
+  PadOperators: true
+AlignConsecutiveDeclarations:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+  #AlignFunctionDeclarations: true clang-format 20
+AlignConsecutiveBitFields:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+AlignEscapedNewlines: LeftWithLastLine
+QualifierAlignment: Right
+PointerAlignment: Right
+ReferenceAlignment: Pointer
+Cpp11BracedListStyle: true
+AlignAfterOpenBracket: AlwaysBreak
+BreakStringLiterals: true
+BreakAdjacentStringLiterals: true
+BreakAfterAttributes: Always
+BreakAfterReturnType: All
+BreakBeforeBinaryOperators: NonAssignment
+BreakFunctionDefinitionParameters: false
+BreakTemplateDeclarations: MultiLine
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterClass: true
+  AfterControlStatement: MultiLine
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: false
+  AfterObjCDeclaration: true
+  AfterStruct: true
+  AfterUnion: false
+  AfterExternBlock: true
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: false
+  BeforeWhile: true
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: true
+AllowShortCaseExpressionOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+  AlignCaseArrows: true
+  AlignCaseColons: true
+AlignOperands: AlignAfterOperator
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 2
+AttributeMacros:
+  - __capability
+ForEachMacros:
+  - foreach
+  - Q_FOREACH
+  - BOOST_FOREACH
+IfMacros:
+  - KJ_IF_MAYBE
+StatementAttributeLikeMacros:
+  - Q_EMIT
+StatementMacros:
+  - Q_UNUSED
+  - QT_REQUIRE_VERSION
+WhitespaceSensitiveMacros:
+  - STRINGIZE
+  - PP_STRINGIZE
+  - BOOST_PP_STRINGIZE
+  - NS_SWIFT_NAME
+  - CF_SWIFT_NAME
+  - EM_ASM
+  - EM_JS
+  - EM_ASM_INT
+  - EM_ASM_DOUBLE
+  - EM_ASM_PTR
+  - MAIN_THREAD_EM_ASM
+  - MAIN_THREAD_EM_ASM_INT
+  - MAIN_THREAD_EM_ASM_DOUBLE
+  - MAIN_THREAD_EM_ASM_DOUBLE
+  - MAIN_THREAD_ASYNC_EM_ASM'
+---
