@@ -33,3 +33,10 @@ Add this repository as a git-submodule and include [CMakePresets.json](CMakePres
 - release::clang
 - debug::emscripten
 - release::emscripten
+
+### Quick Setup
+
+From an empty directory run:
+```sh
+git init && git submodule add https://github.com/Diyou/.cmake && .cmake/setup c++
+```

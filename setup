@@ -38,13 +38,38 @@ if [ ! -d "$SUBDIR" ]; then
     exit 1
 fi
 
-# Copy all files from subdirectory to current directory
-cp -r "$SUBDIR"/* .
+# Print the absolute target directory
+echo "Copying files to: $(pwd)"
 
-# Check if copy was successful
-if [ $? -eq 0 ]; then
-    echo "Successfully copied files from '$SUBDIR' to current directory"
+# Enable dotglob to include hidden files
+shopt -s dotglob
+
+# Copy all files (including hidden) from subdirectory to current directory, echoing each
+copy_success=true
+for file in "$SUBDIR"/*; do
+    if [ -e "$file" ]; then  # Check if file exists (handles empty directories)
+        # Get relative path by removing SUBDIR prefix
+        relative_path="${file#$SUBDIR/}"
+        echo -e "\tCopying: $relative_path"
+        cp -r "$file" .
+        if [ $? -ne 0 ]; then
+            echo -e "\tError: Failed to copy '$relative_path'"
+            copy_success=false
+        fi
+    fi
+done
+
+# Disable dotglob
+shopt -u dotglob
+
+# Check if all copies were successful
+if [ "$copy_success" = true ]; then
+    if [ -n "$(ls -A "$SUBDIR")" ]; then  # Check if directory was non-empty
+        echo "Successfully copied files from '$SUBDIR' to current directory"
+    else
+        echo "No files found in '$SUBDIR' to copy"
+    fi
 else
-    echo "Error: Failed to copy files from '$SUBDIR'"
+    echo "Error: One or more files failed to copy from '$SUBDIR'"
     exit 1
 fi
