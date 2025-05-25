@@ -1,4 +1,4 @@
-# Diyou/.cmake
+# dotcmake
 
 CMake dotfiles for common c++ projects including
 

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://cmake.org/cmake/help/latest/_downloads/3e2d73bff478d88a7de0de736ba5e361/schema.json",
+  "version": 10,
+  "include": ["common.json"],
+  "configurePresets": [
+    {
+      "name": "common::android",
+      "inherits": ["common"],
+      "toolchainFile": "${fileDir}/../ToolChains/android.cmake",
+      "hidden": true,
+      "condition": {
+        "type": "notEquals",
+        "lhs": "$env{ANDROID_HOME}",
+        "rhs": ""
+      }
+    },
+    {
+      "name": "debug::android",
+      "inherits": ["common::debug", "common::android"],
+      "binaryDir": "${sourceDir}/build/Debug-android"
+    },
+    {
+      "name": "release::android",
+      "inherits": ["common::release", "common::android"],
+      "binaryDir": "${sourceDir}/build/Release-android"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "common::android",
+      "hidden": true,
+      "condition": {
+        "type": "notEquals",
+        "lhs": "$env{ANDROID_HOME}",
+        "rhs": ""
+      }
+    },
+    {
+      "name": "debug::android",
+      "inherits": ["common::android"],
+      "configurePreset": "debug::android"
+    },
+    {
+      "name": "release::android",
+      "inherits": ["common::android"],
+      "configurePreset": "release::android"
+    }
+  ]
+}
