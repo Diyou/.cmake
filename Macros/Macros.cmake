@@ -17,7 +17,6 @@ target_sources(${target}
 )
 endfunction()
 
-
 # Shorthand for add_executable(name)
 macro(EXE name)
   add_executable(${name} WIN32)
@@ -94,7 +93,7 @@ function(SetJSON json key value)
           "${value}"
   )
 
-set(${json} ${${json}} PARENT_SCOPE)
+  set(${json} ${${json}} PARENT_SCOPE)
 endfunction()
 
 function(UpdateJSONFile source key value)
@@ -107,19 +106,19 @@ function(UpdateJSONFile source key value)
 endfunction()
 
 function(WriteIfChanged DESTINATION TEXT)
-set(NEEDS_UPDATE TRUE)
-if(EXISTS ${DESTINATION})
-  file(STRINGS ${DESTINATION} compare_string NEWLINE_CONSUME)
-  string(REPLACE "\\;" "\;" compare_string ${compare_string})
-  string(COMPARE NOTEQUAL
-    "${compare_string}"
-    "${TEXT}"
-    NEEDS_UPDATE
-  )
-endif()
-if(NEEDS_UPDATE)
-  file(WRITE ${DESTINATION} "${TEXT}")
-endif()
+  set(NEEDS_UPDATE TRUE)
+  if(EXISTS ${DESTINATION})
+    file(STRINGS ${DESTINATION} compare_string NEWLINE_CONSUME)
+    string(REPLACE "\\;" "\;" compare_string ${compare_string})
+    string(COMPARE NOTEQUAL
+      "${compare_string}"
+      "${TEXT}"
+      NEEDS_UPDATE
+    )
+  endif()
+  if(NEEDS_UPDATE)
+    file(WRITE ${DESTINATION} "${TEXT}")
+  endif()
 endfunction()
 
 function(Configure FILE_IN FILE_OUT)

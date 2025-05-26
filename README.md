@@ -8,7 +8,7 @@ CMake dotfiles for common c++ projects
 - Git-based Package Management
 - [IDE integration](#ide-integration)
   - [vscode](#vscode)
-- c++20 Utils module
+- [c++20 Utils module](Modules/c++)
   - cmake:
     ```cmake
     include(C++Utils)
@@ -57,9 +57,10 @@ git init && git submodule add https://github.com/Diyou/.cmake && .cmake/setup c+
 - #### **_DEBUGGING_:**
 
   - .cmake can automatically copy launch configurations (launch.json) into .vscode depending on the currently configured compiler (see [Options](Options.cmake))
-  - [F5] or launch the default configuration <br>
-    **_NOTE:_** Don't use the cmake-tools debug icon
+  - [F5] or launch the default configuration
+    <br>**_NOTE:_** Don't use the cmake-tools debug icon
 
 - #### **_Intellisense_:**
-  Until cpptools fully supports c++20 modules and import std; I suggest to install vscode-clangd and disable the intellisense engine<br>
-  .cmake can adjust the clangd.path automatically when crosscompiling
+  Until cpptools fully supports c++20 modules and import std; I suggest to install vscode-clangd and disable the intellisense engine
+  <br>.cmake can adjust the clangd.path automatically when crosscompiling
+  <br>**_NOTE:_** Run the 'clangd: Restart language server' command after switching presets or initial build.
