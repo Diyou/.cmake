@@ -11,19 +11,51 @@ import dotcmake;
 
 using namespace std;
 
-template< auto F > void constexpr Log(string_view const &text)
+template< auto F >
+void constexpr Log(
+  string_view const &text,
+  source_location    current = source_location::current())
 {
   // Specialized formatter for void functions
   using VoidFunction = void (*)();
-
   cout << format(
-    "[{}({})] {}\n", VoidFunction(F), dotcmake::GetFunctionName< F >(), text);
+    "[{}:{}][{}({})]\t{}\n",
+    current.line(),
+    current.column(),
+    VoidFunction(F),
+    dotcmake::GetFunctionName< F >(),
+    text);
 }
 
-template< auto F > void constexpr Debug(string_view const &text)
+template< auto F >
+void constexpr Debug(
+  string_view const &text,
+  source_location    current = source_location::current())
 {
 #ifndef NDEBUG
-  Log< F >(text);
+  Log< F >(text, current);
+#endif
+}
+
+// Unspecialized Log functions
+void constexpr Log(
+  string_view const &text,
+  source_location    current = source_location::current())
+{
+  cout << format(
+    "[{}:{}][{}]\t{}\n",
+    current.line(),
+    current.column(),
+    current.function_name(),
+    text);
+}
+
+void constexpr Debug(
+  string_view const &text,
+  source_location    current = source_location::current())
+{
+#ifndef NDEBUG
+  Log(text, current);
 #endif
 }
 
