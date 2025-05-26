@@ -1,6 +1,7 @@
 // Defined through .cmake::Utils
 #ifndef CMAKE_IMPORT_STD
 #  include <iostream>
+#  include <source_location>
 #endif
 
 #ifdef CMAKE_IMPORT_STD
