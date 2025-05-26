@@ -6,7 +6,7 @@ copy_and_print_tree() {
   local indent="$2"
   local is_last="$3"
 
-  # List items in the directory, sorted
+  # List items in the directory, including hidden files due to dotglob
   local items=("$dir"/*)
   local item_count=${#items[@]}
 
@@ -16,7 +16,7 @@ copy_and_print_tree() {
     local is_dir=0
     [ -d "$item" ] && is_dir=1 && base="$base/"
 
-    # Determine prefix
+    # Determine prefix for tree visualization
     local prefix
     if [ $i -eq $((item_count - 1)) ]; then
       prefix="└──"
@@ -27,19 +27,24 @@ copy_and_print_tree() {
     # Print the item
     echo -e "${indent}${prefix} $base"
 
-    # Copy the item
+    # Calculate relative path
     local rel_path="${item#$SUBDIR/}"
-    cp -r "$item" "./$rel_path" 2>/dev/null || { echo -e "${indent}    Error: Failed to copy '$base'"; copy_success=false; }
 
-    # If it's a directory, recurse with proper indentation
     if [ $is_dir -eq 1 ]; then
+      # Create the directory in the target location if it doesn't exist
+      mkdir -p "./$rel_path" || { echo -e "${indent}    Error: Failed to create directory '$rel_path'"; copy_success=false; }
+      # Set indentation for children
       local new_indent
       if [ $i -eq $((item_count - 1)) ]; then
         new_indent="${indent}    "  # Four spaces for last item's children
       else
         new_indent="${indent}│   "  # Vertical bar + three spaces for non-last
       fi
+      # Recurse into the directory
       copy_and_print_tree "$item" "$new_indent" $((i == item_count - 1))
+    else
+      # Copy the file to the target location
+      cp "$item" "./$rel_path" 2>/dev/null || { echo -e "${indent}    Error: Failed to copy '$base'"; copy_success=false; }
     fi
   done
 }

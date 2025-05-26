@@ -94,7 +94,7 @@ for /l %%n in (1,1,%item_count%) do (
     :: Copy the item
     set "rel_path=!item:%SUBDIR%\=!"
     if !is_dir!==1 (
-        xcopy /e /i /y "!item!" "%CD%\!rel_path!" >nul 2>&1 || (
+        xcopy /e /i /y "!item!" "%CD%\!rel_path!\" >nul 2>&1 || (
             echo %indent%    Error: Failed to copy '!base!'
             set copy_success=0
         )
