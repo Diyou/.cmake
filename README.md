@@ -18,6 +18,7 @@ CMake dotfiles for common c++ projects
     ```c++
     import dotcmake;
     ```
+  - For features review [main.c++](Templates/c++/Source/main.c++)
 
 ## Requirement:
 

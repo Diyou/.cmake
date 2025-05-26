@@ -1,3 +1,4 @@
+// Defined through .cmake::Utils
 #ifndef CMAKE_IMPORT_STD
 #  include <iostream>
 #endif
@@ -12,7 +13,9 @@ using namespace std;
 
 template< auto F > void constexpr Log(string_view const &text)
 {
+  // Specialized formatter for void functions
   using VoidFunction = void (*)();
+
   cout << format(
     "[{}({})] {}\n", VoidFunction(F), dotcmake::GetFunctionName< F >(), text);
 }
