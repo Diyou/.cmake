@@ -17,8 +17,7 @@ list(APPEND CMAKE_MODULE_PATH
     ${CMAKE_CURRENT_LIST_DIR}/../Modules
 )
 
-# Options
-option(DOTCMAKE_CONFIGURE_IDE "Configure IDE on Finalizing configuration" OFF)
+include(${CMAKE_CURRENT_LIST_DIR}/../Options.cmake)
 
 # Configure toolchain
 if(CMAKE_MAJOR_VERSION LESS 4)

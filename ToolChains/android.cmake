@@ -38,8 +38,6 @@ if(${PROJECT_NAME} STREQUAL CMAKE_TRY_COMPILE)
     return()
 endif()
 
-message("${CMAKE_MODULE_PATH}")
-
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ ")
 set(CMAKE_CXX_MODULE_STD OFF)
 set(ANDROID_STL c++_shared)
