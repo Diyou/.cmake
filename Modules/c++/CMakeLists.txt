@@ -6,6 +6,7 @@ STATIC(.cmake PUBLIC
         Utils/Compiler.c++
         Utils/Formatters.c++
         Utils/GetFunctionName.c++
+        Utils/Platform.c++
 )
 
 if(TARGET __CMAKE::CXX23 OR TARGET __CMAKE::CXX26)

@@ -33,9 +33,9 @@ void constexpr Debug(
   string_view const &text,
   source_location    current = source_location::current())
 {
-#ifndef NDEBUG
-  Log< F >(text, current);
-#endif
+  if constexpr (dotcmake::Compiler::DEBUG) {
+    Log< F >(text, current);
+  }
 }
 
 // Unspecialized Log functions
@@ -55,9 +55,9 @@ void constexpr Debug(
   string_view const &text,
   source_location    current = source_location::current())
 {
-#ifndef NDEBUG
-  Log(text, current);
-#endif
+  if constexpr (dotcmake::Compiler::DEBUG) {
+    Log(text, current);
+  }
 }
 
 int
