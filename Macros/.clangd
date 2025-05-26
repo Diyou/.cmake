@@ -1,6 +1,7 @@
 @COPY_REMARK@
 CompileFlags:
-  CompilationDatabase: '@CMAKE_BINARY_DIR@'  
+  Compiler: '@CMAKE_CXX_COMPILER@'
+  CompilationDatabase: '@CMAKE_BINARY_DIR@'
 
 Hover:
   ShowAKA: Yes

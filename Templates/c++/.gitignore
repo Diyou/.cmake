@@ -11,6 +11,6 @@ CTestTestfile.cmake
 _deps
 CMakeUserPresets.json
 
-.vscode/launch.json
+.vscode
 build
 /.clangd
