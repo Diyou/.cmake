@@ -1,0 +1,21 @@
+{
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "[cpp]": {
+    "files.insertFinalNewline": true,
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+  },
+  "clangd.arguments": [
+    "--header-insertion=never",
+    "--clang-tidy"
+  ],
+  "cmake.useCMakePresets": "always",
+  "output.smartScroll.enabled": false,
+  "files.exclude": {
+    ".cache": true,
+    "build": true,
+  }
+}

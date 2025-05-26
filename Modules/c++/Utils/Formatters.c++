@@ -1,8 +1,12 @@
 module;
+#ifndef CMAKE_IMPORT_STD
+#  include <format>
+#endif
 
 export module dotcmake:Formatters;
-
+#ifdef CMAKE_IMPORT_STD
 import std;
+#endif
 
 namespace std {
 export

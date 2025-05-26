@@ -1,75 +1,87 @@
 #!/bin/bash
 
-# Get the directory where the script is located
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# Function to print and copy directory structure recursively
+copy_and_print_tree() {
+  local dir="$1"
+  local indent="$2"
+  local is_last="$3"
 
-# Define the parent directory relative to the script
+  # List items in the directory, sorted
+  local items=("$dir"/*)
+  local item_count=${#items[@]}
+
+  for i in "${!items[@]}"; do
+    local item="${items[$i]}"
+    local base=$(basename "$item")
+    local is_dir=0
+    [ -d "$item" ] && is_dir=1 && base="$base/"
+
+    # Determine prefix
+    local prefix
+    if [ $i -eq $((item_count - 1)) ]; then
+      prefix="└──"
+    else
+      prefix="├──"
+    fi
+
+    # Print the item
+    echo -e "${indent}${prefix} $base"
+
+    # Copy the item
+    local rel_path="${item#$SUBDIR/}"
+    cp -r "$item" "./$rel_path" 2>/dev/null || { echo -e "${indent}    Error: Failed to copy '$base'"; copy_success=false; }
+
+    # If it's a directory, recurse with proper indentation
+    if [ $is_dir -eq 1 ]; then
+      local new_indent
+      if [ $i -eq $((item_count - 1)) ]; then
+        new_indent="${indent}    "  # Four spaces for last item's children
+      else
+        new_indent="${indent}│   "  # Vertical bar + three spaces for non-last
+      fi
+      copy_and_print_tree "$item" "$new_indent" $((i == item_count - 1))
+    fi
+  done
+}
+
+# Main script starts here
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PARENT_DIR="$SCRIPT_DIR/Templates"
 
-# Check if exactly one argument is provided
+# Validate input
 if [ $# -ne 1 ]; then
-    echo "Error: Please provide the name of a Template"
-    echo "Usage: $0 <template>"
-    echo "Available Templates:"
-    if [ -d "$PARENT_DIR" ]; then
-        ls -d "$PARENT_DIR"/*/ 2>/dev/null | while read -r dir; do
-            basename "$dir"
-        done
-    else
-        echo "  (No 'Templates' directory found relative to script)"
-    fi
-    exit 1
+  echo "Error: Please provide a template name"
+  echo "Usage: $0 <template>"
+  echo "Available Templates:"
+  [ -d "$PARENT_DIR" ] && ls -d "$PARENT_DIR"/*/ 2>/dev/null | while read -r dir; do basename "$dir"; done || echo "  (No 'Templates' directory found)"
+  exit 1
 fi
 
-# Store the subdirectory name
 SUBDIR="$PARENT_DIR/$1"
 
-# Check if the subdirectory exists
 if [ ! -d "$SUBDIR" ]; then
-    echo "Error: Template '$1' does not exist"
-    echo "Available Templates in '$PARENT_DIR':"
-    if [ -d "$PARENT_DIR" ]; then
-        ls -d "$PARENT_DIR"/*/ 2>/dev/null | while read -r dir; do
-            basename "$dir"
-        done
-    else
-        echo "  (No 'Templates' directory found relative to script)"
-    fi
-    exit 1
+  echo "Error: Template '$1' does not exist"
+  echo "Available Templates:"
+  [ -d "$PARENT_DIR" ] && ls -d "$PARENT_DIR"/*/ 2>/dev/null | while read -r dir; do basename "$dir"; done || echo "  (No 'Templates' directory found)"
+  exit 1
 fi
 
-# Print the absolute target directory
 echo "Copying files to: $(pwd)"
 
-# Enable dotglob to include hidden files
+# Enable dotglob for hidden files
 shopt -s dotglob
 
-# Copy all files (including hidden) from subdirectory to current directory, echoing each
 copy_success=true
-for file in "$SUBDIR"/*; do
-    if [ -e "$file" ]; then  # Check if file exists (handles empty directories)
-        # Get relative path by removing SUBDIR prefix
-        relative_path="${file#$SUBDIR/}"
-        echo -e "\tCopying: $relative_path"
-        cp -r "$file" .
-        if [ $? -ne 0 ]; then
-            echo -e "\tError: Failed to copy '$relative_path'"
-            copy_success=false
-        fi
-    fi
-done
 
-# Disable dotglob
+# Start the recursive copy and print
+copy_and_print_tree "$SUBDIR" "  " 0
+
 shopt -u dotglob
 
-# Check if all copies were successful
-if [ "$copy_success" = true ]; then
-    if [ -n "$(ls -A "$SUBDIR")" ]; then  # Check if directory was non-empty
-        echo "Successfully copied files from '$SUBDIR' to current directory"
-    else
-        echo "No files found in '$SUBDIR' to copy"
-    fi
+# Final status
+if [ "$copy_success" = true ] && [ -n "$(ls -A "$SUBDIR")" ]; then
+  echo "Successfully copied files from '$SUBDIR' to current directory"
 else
-    echo "Error: One or more files failed to copy from '$SUBDIR'"
-    exit 1
+  [ "$copy_success" = false ] && echo "Error: One or more files failed to copy" && exit 1
+  echo "No files found in '$SUBDIR' to copy"
 fi

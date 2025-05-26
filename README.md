@@ -14,7 +14,7 @@ CMake dotfiles for common c++ projects including
     ```
   - c++:
     ```c++
-    import dotcmake;;
+    import dotcmake;
     ```
 
 ### Requirement
@@ -31,12 +31,17 @@ Add this repository as a git-submodule and include [CMakePresets.json](CMakePres
 - release (native)
 - debug::clang
 - release::clang
-- debug::emscripten
-- release::emscripten
+- debug::emscripten (Requires EMSDK environment variable)
+- release::emscripten (Requires EMSDK environment variable)
+- debug::android (Requires ANDROID_HOME environment variable)
+- release::android (Requires ANDROID_HOME environment variable)
+
+> **_Linux NOTE:_** For vscode extensions to see environment variables export them in ~/.profile and run `source ~/.profile && /usr/bin/code` or similar
 
 ### Quick Setup
 
 From an empty directory run:
+
 ```sh
 git init && git submodule add https://github.com/Diyou/.cmake && .cmake/setup c++
 ```

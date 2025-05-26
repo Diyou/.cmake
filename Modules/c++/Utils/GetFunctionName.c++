@@ -1,9 +1,15 @@
 module;
-
+#ifndef CMAKE_IMPORT_STD
+#  include <source_location>
+#  include <string_view>
+#endif
 export module dotcmake:GetFunctionName;
 
 import :Compiler;
+#ifdef CMAKE_IMPORT_STD
 import std;
+#endif
+
 using namespace std;
 constexpr string_view empty_view;
 
