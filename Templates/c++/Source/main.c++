@@ -63,5 +63,7 @@ void constexpr Debug(
 int
 main(int argc, char *argv[])
 {
+  span< char * > args{argv, static_cast< size_t >(argc)};
+
   Debug< main >("Hello World");
 }
