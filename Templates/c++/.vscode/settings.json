@@ -1,4 +1,5 @@
 {
+  "C_Cpp.autoAddFileAssociations" : false,
   "C_Cpp.intelliSenseEngine" : "disabled",
   "[cpp]" : 
   {
@@ -10,7 +11,7 @@
     "editor.defaultFormatter" : null
   },
   "clangd.arguments" : [ "--header-insertion=never", "--clang-tidy" ],
-  "clangd.path" : "clangd",
+  "clangd.path" : "/usr/bin/clangd",
   "cmake.useCMakePresets" : "always",
   "editor.defaultFormatter" : "esbenp.prettier-vscode",
   "editor.formatOnSave" : true,

@@ -160,18 +160,55 @@ function(AppendPath)
   set(ENV{PATH} "${_PATH}") 
 endfunction()
 
+macro(AddQuotes var)
+  if(NOT ${ARGV1} EQUAL "")
+    set(${var} "\"${ARGV1}\"")
+  else()
+    set(${var} "\"${${var}}\"")
+  endif()
+endmacro()
+
+function(SetJSON json key value)
+  if(NOT json)
+    return()
+  endif()
+
+  string(JSON elements LENGTH "${${json}}")
+  if(NOT elements OR elements EQUAL 0)
+    return()
+  endif()
+
+  string( JSON ${json} 
+          SET "${${json}}"
+          "${key}"
+          "${value}"
+  )
+
+set(${json} ${${json}} PARENT_SCOPE)
+endfunction()
+
+function(UpdateJSONFile source key value)
+  file(READ ${source} content)
+  SetJSON(content clangd.path ${CLANGD})
+
+  if(content)
+      WriteIfChanged(${source} "${content}")
+  endif()
+endfunction()
+
 function(WriteIfChanged DESTINATION TEXT)
-set(Changed FALSE)
+set(NEEDS_UPDATE TRUE)
 if(EXISTS ${DESTINATION})
   file(STRINGS ${DESTINATION} compare_string NEWLINE_CONSUME)
   string(REPLACE "\\;" "\;" compare_string ${compare_string})
-  string(COMPARE EQUAL
+  string(COMPARE NOTEQUAL
     "${compare_string}"
     "${TEXT}"
-    Changed
+    NEEDS_UPDATE
   )
 endif()
-if(NOT ${Changed})
+if(NEEDS_UPDATE)
+  message("Needs update")
   file(WRITE ${DESTINATION} "${TEXT}")
 endif()
 endfunction()

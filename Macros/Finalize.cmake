@@ -14,21 +14,13 @@ function(ConfigureVScode)
     # Configure clangd
     if(CMAKE_EXPORT_COMPILE_COMMANDS)
         get_filename_component(COMPILER_PATH ${CMAKE_CXX_COMPILER} DIRECTORY)
-
-        file(READ ${CMAKE_SOURCE_DIR}/.vscode/settings.json vscode_settings)
-        if(vscode_settings)
-            string(JSON elements LENGTH "${vscode_settings}")
-            if(elements AND NOT elements EQUAL 0)
-                string( JSON vscode_settings 
-                        SET "${vscode_settings}"
-                        "clangd.path"
-                        "\"${COMPILER_PATH}/clangd\""
-                )
-                if(vscode_settings)
-                    WriteIfChanged(${CMAKE_SOURCE_DIR}/.vscode/settings.json "${vscode_settings}")
-                  endif()
-            endif()
-        endif()
+        AddQuotes(CLANGD ${COMPILER_PATH}/clangd)
+        
+        UpdateJSONFile(
+            ${CMAKE_SOURCE_DIR}/.vscode/settings.json
+            clangd.path
+            ${CLANGD}
+        )
     endif()
 endfunction()
 
