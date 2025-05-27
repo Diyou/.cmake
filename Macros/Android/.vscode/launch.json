@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "android",
+            "request": "launch",
+            "name": "Android Launch",
+            "appSrcRoot": "${command:cmake.getLaunchTargetDirectory}",
+            "apkFile": "${command:cmake.launchTargetPath}", 
+            "preLaunchTask": "CMake: build",
+        }
+    ]
+}

@@ -1,10 +1,10 @@
 # dotcmake
 
-CMake dotfiles for common c++ projects
+CMake configuration suite for common c++ projects
 
 ## Content:
 
-- Presets for specific toolchains (native/clang/emscripten)
+- [Presets](#usage) for specific toolchains (native/clang/emscripten/android)
 - Git-based Package Management
 - [IDE integration](#ide-integration)
   - [vscode](#vscode)
@@ -30,14 +30,16 @@ CMake dotfiles for common c++ projects
 
 Add this repository as a git-submodule and include [CMakePresets.json](CMakePresets.json) in the top-level project to use supported targets:
 
-- debug (native)
-- release (native)
-- debug::clang
-- release::clang
-- debug::emscripten \*Requires env{EMSDK}
-- release::emscripten \*Requires env{EMSDK}
-- debug::android \*Requires env{ANDROID_HOME}
-- release::android \*Requires env{ANDROID_HOME}
+| Target              | Environment Variable |
+| ------------------- | -------------------- |
+| debug (native)      |                      |
+| release (native)    |                      |
+| debug::clang        |                      |
+| release::clang      |                      |
+| debug::emscripten   | EMSDK                |
+| release::emscripten | EMSDK                |
+| debug::android      | ANDROID_HOME         |
+| release::android    | ANDROID_HOME         |
 
 ## Quick Setup:
 

@@ -1,7 +1,9 @@
 function(ConfigureVScode)
     list(JOIN DEBUG_ARGS [[", "]] DEBUG_ARGS)
 
-    if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
+    if(CMAKE_SYSTEM_NAME STREQUAL Android)
+        set(profile Android)
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES Clang)
         set(profile Clang)
     else()
         set(profile ${CMAKE_CXX_COMPILER_ID})

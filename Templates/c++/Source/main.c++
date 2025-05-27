@@ -2,6 +2,7 @@
 #ifndef CMAKE_IMPORT_STD
 #  include <iostream>
 #  include <source_location>
+#  include <span>
 #endif
 
 #ifdef CMAKE_IMPORT_STD

@@ -5,6 +5,7 @@ module;
 #else
 #  undef MAC
 #endif
+#undef ANDROID
 export module dotcmake:Platform;
 
 namespace dotcmake {
