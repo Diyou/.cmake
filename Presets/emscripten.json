@@ -17,12 +17,12 @@
     {
       "name": "debug::emscripten",
       "inherits": ["common::debug", "common::emscripten"],
-      "binaryDir": "${sourceDir}/build/Debug-emscripten"
+      "binaryDir": "build/$env{CMAKE_BUILD_TYPE}-emscripten"
     },
     {
       "name": "release::emscripten",
       "inherits": ["common::release", "common::emscripten"],
-      "binaryDir": "${sourceDir}/build/Release-emscripten"
+      "binaryDir": "build/$env{CMAKE_BUILD_TYPE}-emscripten"
     }
   ],
   "buildPresets": [

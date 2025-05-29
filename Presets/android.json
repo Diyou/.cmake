@@ -6,6 +6,9 @@
     {
       "name": "common::android",
       "inherits": ["common"],
+      "cacheVariables": {
+        "ANDROID_ABI": "arm64-v8a"
+      },
       "toolchainFile": "${fileDir}/../ToolChains/android.cmake",
       "hidden": true,
       "condition": {
@@ -17,12 +20,12 @@
     {
       "name": "debug::android",
       "inherits": ["common::debug", "common::android"],
-      "binaryDir": "${sourceDir}/build/Debug-android"
+      "binaryDir": "build/$env{CMAKE_BUILD_TYPE}-android"
     },
     {
       "name": "release::android",
       "inherits": ["common::release", "common::android"],
-      "binaryDir": "${sourceDir}/build/Release-android"
+      "binaryDir": "build/$env{CMAKE_BUILD_TYPE}-android"
     }
   ],
   "buildPresets": [

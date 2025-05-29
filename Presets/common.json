@@ -16,10 +16,13 @@
     },
     {
       "name": "common::debug",
-      "cacheVariables": {
+      "environment": {
         "CMAKE_BUILD_TYPE": "Debug"
       },
-      "binaryDir": "${sourceDir}/build/Debug-${hostSystemName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "$env{CMAKE_BUILD_TYPE}"
+      },
+      "binaryDir": "build/$env{CMAKE_BUILD_TYPE}-${hostSystemName}",
       "hidden": true
     },
     {
@@ -28,10 +31,13 @@
     },
     {
       "name": "common::release",
-      "cacheVariables": {
+      "environment": {
         "CMAKE_BUILD_TYPE": "Release"
       },
-      "binaryDir": "${sourceDir}/build/Release-${hostSystemName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "$env{CMAKE_BUILD_TYPE}"
+      },
+      "binaryDir": "build/$env{CMAKE_BUILD_TYPE}-${hostSystemName}",
       "hidden": true
     },
     {

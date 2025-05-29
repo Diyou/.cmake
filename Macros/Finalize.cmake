@@ -42,7 +42,7 @@ function(Finalize)
     # clangd support
     if(CMAKE_EXPORT_COMPILE_COMMANDS)
         Configure(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/.clangd ${CMAKE_SOURCE_DIR}/.clangd)
-    endif()
+     endif()
 endfunction()
 
 cmake_language(DEFER CALL Finalize)

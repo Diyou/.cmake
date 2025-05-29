@@ -17,12 +17,12 @@
     {
       "name": "debug::clang",
       "inherits": ["common::debug", "common::clang"],
-      "binaryDir": "${sourceDir}/build/Debug-${hostSystemName}-clang"
+      "binaryDir": "build/$env{CMAKE_BUILD_TYPE}-${hostSystemName}-clang"
     },
     {
       "name": "release::clang",
       "inherits": ["common::release", "common::clang"],
-      "binaryDir": "${sourceDir}/build/Release-${hostSystemName}-clang"
+      "binaryDir": "build/$env{CMAKE_BUILD_TYPE}-${hostSystemName}-clang"
     }
   ],
   "buildPresets": [
