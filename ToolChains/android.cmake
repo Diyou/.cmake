@@ -2,8 +2,11 @@ if(${PROJECT_NAME} STREQUAL CMAKE_TRY_COMPILE)
     return()
 endif()
 
+include(${CMAKE_CURRENT_LIST_DIR}/common.cmake)
+
 find_package(Java 24 COMPONENTS Development)
 if(NOT Java_FOUND)
+    # TODO install local openjdk in .cache
     message(FATAL_ERROR "No Java Development(JDK) environment found")
 endif()
 
@@ -28,8 +31,8 @@ set(DOTCMAKE_RUN_ONCE ON)
 
 set(INTERNAL_BINARY_DIR_LINK "${CMAKE_BINARY_DIR}-${ANDROID_ABI}")
 get_filename_component(INTERNAL_BINARY_DIR "${INTERNAL_BINARY_DIR_LINK}" REALPATH)
-message("Real: ${INTERNAL_BINARY_DIR}")
-macro(LoadInternalBinaryDir)
+
+macro(LoadInternalCache)
     load_cache(
         "${INTERNAL_BINARY_DIR}"
         EXCLUDE
@@ -43,14 +46,14 @@ macro(LoadInternalBinaryDir)
 endmacro()
 
 if(EXISTS ${INTERNAL_BINARY_DIR})
-    LoadInternalBinaryDir()
+    LoadInternalCache()
     return()
 endif()
 
 if(WIN32)
-    set(gradlew gradlew)
+    set(./ "")
 else()
-    set(gradlew ./gradlew)
+    set(./ ./)
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
@@ -66,8 +69,8 @@ else()
 endif()
 
 execute_process(
-    COMMAND ${gradlew} ${GRADLE_configureCMake}[${ANDROID_ABI}]
+    COMMAND ${./}${gradlew} ${GRADLE_configureCMake}[${ANDROID_ABI}]
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Source/Android
 )
 
-LoadInternalBinaryDir()
+LoadInternalCache()

@@ -11,7 +11,7 @@
           "value": "ON"
         }
       },
-      "toolchainFile": "${fileDir}/../ToolChains/common.cmake",
+      "toolchainFile": "${fileDir}/../ToolChains/default.cmake",
       "hidden": true
     },
     {
