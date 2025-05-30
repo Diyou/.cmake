@@ -4,3 +4,4 @@ file(CREATE_LINK
 SYMBOLIC)
 
 include(${CMAKE_CURRENT_LIST_DIR}/../clang.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/common.cmake)

@@ -1,7 +1,5 @@
 include(${CMAKE_CURRENT_LIST_DIR}/clang.cmake)
-
-# TODO disable until functional
-set(CMAKE_CXX_MODULE_STD OFF)
+include(${CMAKE_CURRENT_LIST_DIR}/gradle/common.cmake)
 
 # gradle requires java
 find_package(Java 24 COMPONENTS Development)
@@ -40,9 +38,16 @@ if(NOT EXISTS ${INTERNAL_BINARY_DIR_LINK})
     endif()
 
     execute_process(
-        COMMAND ${./}gradlew ${GRADLE_configureCMake}[${ANDROID_ABI}]
+        COMMAND ${./}gradlew
+            ${GRADLE_configureCMake}[${ANDROID_ABI}]
+            #--stacktrace
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Source/Android
+        RESULT_VARIABLE result
     )
+
+    if(${result})
+        message(FATAL_ERROR "gradlew returned ${result}")
+    endif()
 endif()
 
 # load internal gradle cache

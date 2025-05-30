@@ -5,28 +5,21 @@ module;
 #else
 #  undef MAC
 #endif
-#undef ANDROID
+
 export module dotcmake:Platform;
 
 namespace dotcmake {
 export struct Platform
 {
-  constexpr static bool LINUX =
-#ifdef __linux__
-    true;
-#else
-    false;
-#endif
-
-  constexpr static bool WINDOWS =
-#ifdef _WIN32
-    true;
-#else
-    false;
-#endif
-
-  constexpr static bool ANDROID =
+  constexpr static bool Android =
 #ifdef __ANDROID__
+    true;
+#else
+    false;
+#endif
+
+  constexpr static bool WASM =
+#ifdef __EMSCRIPTEN__
     true;
 #else
     false;
@@ -39,16 +32,23 @@ export struct Platform
     false;
 #endif
 
-  constexpr static bool MACOS =
-#ifdef MAC
-    !IOS;
+  constexpr static bool Linux =
+#ifdef __linux__
+    !Android && !WASM;
 #else
     false;
 #endif
 
-  constexpr static bool WASM =
-#ifdef __EMSCRIPTEN__
+  constexpr static bool Windows =
+#ifdef _WIN32
     true;
+#else
+    false;
+#endif
+
+  constexpr static bool macOS =
+#ifdef MAC
+    !IOS;
 #else
     false;
 #endif
