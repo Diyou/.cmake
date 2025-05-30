@@ -30,16 +30,12 @@ CMake configuration suite for common c++ projects
 
 Add this repository as a git-submodule and include [CMakePresets.json](CMakePresets.json) in the top-level project to use supported targets:
 
-| Target              | Environment Variable |
-| ------------------- | -------------------- |
-| debug (native)      |                      |
-| release (native)    |                      |
-| debug::clang        |                      |
-| release::clang      |                      |
-| debug::emscripten   | EMSDK                |
-| release::emscripten | EMSDK                |
-| debug::android      | ANDROID_HOME         |
-| release::android    | ANDROID_HOME         |
+| Target                                   | Description            | Environment Variable |
+| ---------------------------------------- | ---------------------- | :------------------: |
+| debug<br>release                         | default compiler       |                      |
+| debug::clang<br>release::clang           | clang on windows/linux |                      |
+| debug::emscripten<br>release::emscripten | WASM                   |        EMSDK         |
+| debug::android<br>release::android       | Android                |     ANDROID_HOME     |
 
 ## Quick Setup:
 
