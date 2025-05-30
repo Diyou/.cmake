@@ -27,6 +27,8 @@
     },
     {
       "name": "debug",
+      "displayName": "Debug",
+      "description": "Native debug build using default system compiler",
       "inherits": ["common", "common::debug"]
     },
     {
@@ -42,6 +44,8 @@
     },
     {
       "name": "release",
+      "displayName": "Release",
+      "description": "Native release build using default system compiler",
       "inherits": ["common", "common::release"]
     }
   ],
@@ -49,11 +53,13 @@
     { "name": "common", "hidden": true },
     {
       "name": "debug",
+      "displayName": "Debug",
       "inherits": ["common"],
       "configurePreset": "debug"
     },
     {
       "name": "release",
+      "displayName": "Release",
       "inherits": ["common"],
       "configurePreset": "release"
     }

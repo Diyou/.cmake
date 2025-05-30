@@ -16,11 +16,15 @@
     },
     {
       "name": "debug::emscripten",
+      "displayName": "emcc (Debug)",
+      "description": "WASM debug build using emscripten",
       "inherits": ["common::debug", "common::emscripten"],
       "binaryDir": "build/$env{CMAKE_BUILD_TYPE}-emscripten"
     },
     {
       "name": "release::emscripten",
+      "displayName": "emcc (Release)",
+      "description": "WASM release build using emscripten",
       "inherits": ["common::release", "common::emscripten"],
       "binaryDir": "build/$env{CMAKE_BUILD_TYPE}-emscripten"
     }
@@ -37,11 +41,13 @@
     },
     {
       "name": "debug::emscripten",
+      "displayName": "Debug",
       "inherits": ["common::emscripten"],
       "configurePreset": "debug::emscripten"
     },
     {
       "name": "release::emscripten",
+      "displayName": "Release",
       "inherits": ["common::emscripten"],
       "configurePreset": "release::emscripten"
     }

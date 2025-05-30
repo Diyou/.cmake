@@ -16,11 +16,15 @@
     },
     {
       "name": "debug::clang",
+      "displayName": "clang (Debug)",
+      "description": "Native debug build using clang compiler",
       "inherits": ["common::debug", "common::clang"],
       "binaryDir": "build/$env{CMAKE_BUILD_TYPE}-${hostSystemName}-clang"
     },
     {
       "name": "release::clang",
+      "displayName": "clang (Release)",
+      "description": "Native release build using clang compiler",
       "inherits": ["common::release", "common::clang"],
       "binaryDir": "build/$env{CMAKE_BUILD_TYPE}-${hostSystemName}-clang"
     }
@@ -37,12 +41,14 @@
     },
     {
       "name": "debug::clang",
+      "displayName": "Debug",
       "inherits": ["common::clang"],
       "configurePreset": "debug::clang"
     },
     {
       "name": "release::clang",
-      "inherits": ["common::clang"],
+      "displayName": "Release",
+      "inherits": ["release", "common::clang"],
       "configurePreset": "release::clang"
     }
   ]

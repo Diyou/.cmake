@@ -19,11 +19,15 @@
     },
     {
       "name": "debug::android",
+      "displayName": "Android (Debug)",
+      "description": "Android debug build using gradle",
       "inherits": ["common::debug", "common::android"],
       "binaryDir": "build/$env{CMAKE_BUILD_TYPE}-android"
     },
     {
       "name": "release::android",
+      "displayName": "Android (Release)",
+      "description": "Android release build using gradle",
       "inherits": ["common::release", "common::android"],
       "binaryDir": "build/$env{CMAKE_BUILD_TYPE}-android"
     }
@@ -40,11 +44,13 @@
     },
     {
       "name": "debug::android",
+      "displayName": "Debug",
       "inherits": ["common::android"],
       "configurePreset": "debug::android"
     },
     {
       "name": "release::android",
+      "displayName": "Release",
       "inherits": ["common::android"],
       "configurePreset": "release::android"
     }
