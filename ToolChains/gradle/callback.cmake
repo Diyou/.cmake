@@ -3,4 +3,4 @@ file(CREATE_LINK
     ${CMAKE_SOURCE_DIR}/build/${CMAKE_BUILD_TYPE}-android-${ANDROID_ABI}
 SYMBOLIC)
 
-include(${CMAKE_CURRENT_LIST_DIR}/../common.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../clang.cmake)
