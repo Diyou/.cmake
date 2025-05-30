@@ -17,12 +17,6 @@ target_sources(${target}
 )
 endfunction()
 
-# Shorthand for add_executable(name)
-macro(EXE name)
-  add_executable(${name} WIN32)
-  _add_sources(${name} ${ARGN})
-endmacro()
-
 # Shorthand for add_library(name)
 macro(LIB name)
   add_library(${name})
@@ -51,6 +45,19 @@ endmacro()
 macro(MODULE name)
   add_library(${name} MODULE)
   _add_sources(${name} ${ARGN})
+endmacro()
+
+# Shorthand for add_executable(name)
+macro(EXE name)
+  if(ANDROID)
+    DLL(${name} ${ARGN})
+    set_target_properties(${name} PROPERTIES
+        OUTPUT_NAME main
+    )
+  else()
+    add_executable(${name} WIN32)
+    _add_sources(${name} ${ARGN})
+  endif()
 endmacro()
 
 macro(ALIAS target alias)
