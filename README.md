@@ -28,16 +28,17 @@ CMake configuration suite for common c++ projects
 
 ## Usage:
 
-Add this repository as a git-submodule and include [CMakePresets.json](CMakePresets.json) in the top-level project to use supported targets:
+Add this repository as a git-submodule and include [CMakePresets.json](CMakePresets.json) in the top-level project.<br>
+Cross-Compile targets are enabled via environment variables:
 
-| Target                                   | Description            |     Environment Variable     |
-| ---------------------------------------- | ---------------------- | :--------------------------: |
-| debug<br>release                         | default compiler       |                              |
-| debug::clang<br>release::clang           | clang on windows/linux |                              |
-| debug::emscripten<br>release::emscripten | WASM                   |            EMSDK             |
-| debug::android<br>release::android       | Android                | ANDROID_HOME<br>JAVA_HOME \* |
+| Target                                   |     Environment Variable     | Example                                  |
+| :--------------------------------------- | :--------------------------: | ---------------------------------------- |
+| debug<br>release                         |                              |                                          |
+| debug::clang<br>release::clang           |                              |                                          |
+| debug::emscripten<br>release::emscripten |          EMSCRIPTEN          | /usr/lib/emscripten                      |
+| debug::android<br>release::android       | ANDROID_HOME<br>JAVA_HOME \* | ~/Android/Sdk<br>/opt/android-studio/jbr |
 
-\* Optional and should be compatible with gradle (e.g. /opt/android-studio/jbr)
+\* Optional but preferred JDK location (fallback to system Java)
 
 ## Quick Setup:
 

@@ -10,7 +10,7 @@
       "hidden": true,
       "condition": {
         "type": "notEquals",
-        "lhs": "$env{EMSDK}",
+        "lhs": "$env{EMSCRIPTEN}",
         "rhs": ""
       }
     },
@@ -35,7 +35,7 @@
       "hidden": true,
       "condition": {
         "type": "notEquals",
-        "lhs": "$env{EMSDK}",
+        "lhs": "$env{EMSCRIPTEN}",
         "rhs": ""
       }
     },
