@@ -94,18 +94,24 @@ function(SetJSON json key value)
     return()
   endif()
 
-  string( JSON ${json} 
-          SET "${${json}}"
-          "${key}"
-          "${value}"
-  )
-
+  if("${value}" STREQUAL "")
+    string( JSON ${json} 
+            REMOVE "${${json}}"
+            "${key}"
+    )
+  else()
+    string( JSON ${json} 
+            SET "${${json}}"
+            "${key}"
+            "${value}"
+    )
+  endif()
   set(${json} ${${json}} PARENT_SCOPE)
 endfunction()
 
 function(UpdateJSONFile source key value)
   file(READ ${source} content)
-  SetJSON(content clangd.path ${CLANGD})
+  SetJSON(content ${key} "${value}")
 
   if(content)
       WriteIfChanged(${source} "${content}")
