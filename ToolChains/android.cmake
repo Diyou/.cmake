@@ -2,10 +2,14 @@ include(${CMAKE_CURRENT_LIST_DIR}/clang.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/gradle/common.cmake)
 
 # gradle requires java
-find_package(Java 24 COMPONENTS Development)
-if(NOT Java_FOUND)
-    # TODO install local openjdk in .cache
-    message(FATAL_ERROR "No Java Development(JDK) environment found")
+if(DEFINED ENV{JAVA_HOME})
+    AppendPath(BEFORE $ENV{JAVA_HOME}/bin)
+else()
+    find_package(Java 17 COMPONENTS Development)
+    if(NOT Java_FOUND)
+        # TODO install **COMPATIBLE** local openjdk in .cache
+        message(FATAL_ERROR "No Java Development(JDK) environment found")
+    endif()
 endif()
 
 # gradle requires ANDROID_HOME
@@ -29,6 +33,7 @@ get_filename_component(INTERNAL_BINARY_DIR "${INTERNAL_BINARY_DIR_LINK}" REALPAT
 
 # sync with gradle
 if(NOT EXISTS ${INTERNAL_BINARY_DIR_LINK})
+    # TODO delete cache files in .cxx to trigger rebuild
     if(CMAKE_BUILD_TYPE STREQUAL Debug)
         set(GRADLE_assemble assembleDebug)
         set(GRADLE_configureCMake configureCMakeDebug)
