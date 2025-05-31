@@ -20,7 +20,6 @@ function(UpdateEMSDK)
     )
 endfunction()
 function(UpdateEmscripten)
-    UpdateEMSDK()
     execute_process(COMMAND ${./}${emsdk}
         install latest
         WORKING_DIRECTORY "${EMSDK}"
@@ -47,9 +46,14 @@ else()
             message(FATAL_ERROR "EMSDK not found but directory is not empty to install")
         else()
             DownloadEMSDK(${EMSDK})
+            UpdateEmscripten()
+        endif()
+    else()
+        if(DOTCMAKE_EMSDK_AUTOUPDATE)
+            UpdateEMSDK()
+            UpdateEmscripten()
         endif()
     endif()
-    UpdateEmscripten()
     set(EMSCRIPTEN_ROOT "${EMSDK}/upstream/emscripten")
 endif()
 
