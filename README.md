@@ -30,12 +30,14 @@ CMake configuration suite for common c++ projects
 
 Add this repository as a git-submodule and include [CMakePresets.json](CMakePresets.json) in the top-level project to use supported targets:
 
-| Target                                   | Description            | Environment Variable |
-| ---------------------------------------- | ---------------------- | :------------------: |
-| debug<br>release                         | default compiler       |                      |
-| debug::clang<br>release::clang           | clang on windows/linux |                      |
-| debug::emscripten<br>release::emscripten | WASM                   |        EMSDK         |
-| debug::android<br>release::android       | Android                |     ANDROID_HOME     |
+| Target                                   | Description            |     Environment Variable     |
+| ---------------------------------------- | ---------------------- | :--------------------------: |
+| debug<br>release                         | default compiler       |                              |
+| debug::clang<br>release::clang           | clang on windows/linux |                              |
+| debug::emscripten<br>release::emscripten | WASM                   |            EMSDK             |
+| debug::android<br>release::android       | Android                | ANDROID_HOME<br>JAVA_HOME \* |
+
+\* Optional and should be compatible with gradle (e.g. /opt/android-studio/jbr)
 
 ## Quick Setup:
 
@@ -61,5 +63,5 @@ git init && git submodule add https://github.com/Diyou/.cmake && .cmake/setup c+
 
 - #### **_Intellisense_:**
   Until cpptools fully supports c++20 modules and import std; I suggest to install vscode-clangd and disable the intellisense engine
-  <br>.cmake can adjust the clangd.path automatically when crosscompiling
+  <br>.cmake can adjust the clangd.path automatically when cross-compiling
   <br>**_NOTE:_** Run the 'clangd: Restart language server' command after switching presets or initial build.
