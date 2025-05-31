@@ -52,5 +52,8 @@ export struct Platform
 #else
     false;
 #endif
+
+  constexpr static bool MOBILE  = IOS || Android;
+  constexpr static bool DESKTOP = !MOBILE;
 };
 }

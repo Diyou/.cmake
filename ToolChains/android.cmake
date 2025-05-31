@@ -33,7 +33,13 @@ get_filename_component(INTERNAL_BINARY_DIR "${INTERNAL_BINARY_DIR_LINK}" REALPAT
 
 # sync with gradle
 if(NOT EXISTS ${INTERNAL_BINARY_DIR_LINK})
-    # TODO delete cache files in .cxx to trigger rebuild
+    # trigger reconfiguration
+    file(GLOB caches ${CMAKE_SOURCE_DIR}/Source/Android/app/.cxx/${CMAKE_BUILD_TYPE}/*/${ANDROID_ABI})
+    foreach(cache ${caches})
+        file(REMOVE_RECURSE "${cache}")
+    endforeach()
+
+    # call gradle configuration
     if(CMAKE_BUILD_TYPE STREQUAL Debug)
         set(GRADLE_assemble assembleDebug)
         set(GRADLE_configureCMake configureCMakeDebug)
@@ -61,7 +67,4 @@ load_cache(
     EXCLUDE
         CMAKE_TOOLCHAIN_FILE
         CMAKE_PROJECT_TOP_LEVEL_INCLUDES
-)
-set_directory_properties(PROPERTIES ADDITIONAL_CLEAN_FILES
-    "${INTERNAL_BINARY_DIR};${INTERNAL_BINARY_DIR_LINK}"
 )
