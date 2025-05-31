@@ -40,18 +40,13 @@ if(NOT EXISTS ${INTERNAL_BINARY_DIR_LINK})
     endforeach()
 
     # call gradle configuration
-    if(CMAKE_BUILD_TYPE STREQUAL Debug)
-        set(GRADLE_assemble assembleDebug)
-        set(GRADLE_configureCMake configureCMakeDebug)
-    else()
-        set(GRADLE_assemble assembleRelease)
-        set(GRADLE_configureCMake configureCMakeRelease)
-    endif()
+    set(GRADLE_assemble assemble${CMAKE_BUILD_TYPE})
+    set(GRADLE_configureCMake configureCMake${CMAKE_BUILD_TYPE})
 
     execute_process(
         COMMAND ${./}gradlew
             ${GRADLE_configureCMake}[${ANDROID_ABI}]
-            #--stacktrace
+            --stacktrace
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Source/Android
         RESULT_VARIABLE result
     )
