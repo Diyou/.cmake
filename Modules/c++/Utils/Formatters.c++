@@ -23,7 +23,7 @@ export
     constexpr auto
     parse(format_parse_context &ctx)
     {
-      auto iter = ctx.begin();
+      format_parse_context::iterator iter = ctx.begin();
 
       if (iter != ctx.end() && *iter != '}') {
         char const chr = *iter++;
