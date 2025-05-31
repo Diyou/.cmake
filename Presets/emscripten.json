@@ -9,9 +9,19 @@
       "toolchainFile": "${fileDir}/../ToolChains/emscripten.cmake",
       "hidden": true,
       "condition": {
-        "type": "notEquals",
-        "lhs": "$env{EMSCRIPTEN}",
-        "rhs": ""
+        "type": "anyOf",
+        "conditions": [
+          {
+            "type": "notEquals",
+            "lhs": "$env{EMSCRIPTEN}",
+            "rhs": ""
+          },
+          {
+            "type": "notEquals",
+            "lhs": "$env{EMSDK}",
+            "rhs": ""
+          }
+        ]
       }
     },
     {
@@ -34,9 +44,19 @@
       "name": "common::emscripten",
       "hidden": true,
       "condition": {
-        "type": "notEquals",
-        "lhs": "$env{EMSCRIPTEN}",
-        "rhs": ""
+        "type": "anyOf",
+        "conditions": [
+          {
+            "type": "notEquals",
+            "lhs": "$env{EMSCRIPTEN}",
+            "rhs": ""
+          },
+          {
+            "type": "notEquals",
+            "lhs": "$env{EMSDK}",
+            "rhs": ""
+          }
+        ]
       }
     },
     {

@@ -1,6 +1,49 @@
-if(NOT EXISTS $ENV{EMSCRIPTEN})
-    message(FATAL_ERROR "No emscripten found")
+include(${CMAKE_CURRENT_LIST_DIR}/clang.cmake)
+# TODO disable until functional
+unset(CMAKE_CXX_MODULE_STD)
+unset(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD)
+
+if(WIN32)
+    set(emsdk "emsdk.bat")
+    set(emsdk_env "emsdk_env.bat")
+else()
+    set(emsdk "emsdk")
+    set(emsdk_env "source ./emsdk_env.sh")
 endif()
 
-include(${CMAKE_CURRENT_LIST_DIR}/clang.cmake)
-include("$ENV{EMSCRIPTEN}/cmake/Modules/Platform/Emscripten.cmake")
+set(EMSDK "${CMAKE_CURRENT_SOURCE_DIR}/$ENV{EMSDK}")
+
+function(DownloadEMSDK destination)
+    execute_process(COMMAND ${GIT_EXECUTABLE}
+        clone https://github.com/emscripten-core/emsdk "${destination}"
+    )
+    execute_process(COMMAND ${./}${emsdk}
+        install latest
+        WORKING_DIRECTORY "${EMSDK}"
+    )
+    execute_process(COMMAND ${./}${emsdk}
+        activate latest
+        WORKING_DIRECTORY "${EMSDK}"
+    )
+endfunction()
+
+if(EXISTS $ENV{EMSCRIPTEN})
+    set(EMSCRIPTEN_ROOT "$ENV{EMSCRIPTEN}")
+else()
+    if(NOT EXISTS ${EMSDK} OR NOT EXISTS ${EMSDK}/${emsdk})
+        file(GLOB not_empty "${EMSDK}/*")
+        if(EXISTS ${EMSDK} AND not_empty)
+            message(FATAL_ERROR "EMSDK not found but directory is not empty to install")
+        else()
+            DownloadEMSDK(${EMSDK})
+        endif()
+    endif()
+
+    set(EMSCRIPTEN_ROOT "${EMSDK}/upstream/emscripten")
+endif()
+
+include("${EMSCRIPTEN_ROOT}/cmake/Modules/Platform/Emscripten.cmake")
+
+# ports
+set(SDL2_DIR "${EMSCRIPTEN_ROOT}/tools/ports/sdl2")
+set(SDL3_DIR "${EMSCRIPTEN_ROOT}/tools/ports/sdl3")
