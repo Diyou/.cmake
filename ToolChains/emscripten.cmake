@@ -13,10 +13,14 @@ endif()
 
 set(EMSDK "${CMAKE_CURRENT_SOURCE_DIR}/$ENV{EMSDK}")
 
-function(DownloadEMSDK destination)
-    execute_process(COMMAND ${GIT_EXECUTABLE}
-        clone https://github.com/emscripten-core/emsdk "${destination}"
+function(UpdateEMSDK)
+    execute_process(COMMAND ${GIT_EXECUTABLE} pull
+        WORKING_DIRECTORY "${EMSDK}"
+        OUTPUT_VARIABLE output
     )
+endfunction()
+function(UpdateEmscripten)
+    UpdateEMSDK()
     execute_process(COMMAND ${./}${emsdk}
         install latest
         WORKING_DIRECTORY "${EMSDK}"
@@ -24,6 +28,13 @@ function(DownloadEMSDK destination)
     execute_process(COMMAND ${./}${emsdk}
         activate latest
         WORKING_DIRECTORY "${EMSDK}"
+        OUTPUT_VARIABLE output
+    )
+endfunction()
+
+function(DownloadEMSDK destination)
+    execute_process(COMMAND ${GIT_EXECUTABLE}
+        clone https://github.com/emscripten-core/emsdk "${destination}"
     )
 endfunction()
 
@@ -38,7 +49,7 @@ else()
             DownloadEMSDK(${EMSDK})
         endif()
     endif()
-
+    UpdateEmscripten()
     set(EMSCRIPTEN_ROOT "${EMSDK}/upstream/emscripten")
 endif()
 
