@@ -28,6 +28,10 @@ if(NOT DEFINED ANDROID_ABI)
 endif()
 list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES ANDROID_ABI)
 
+set(GRADLE_assemble assemble${CMAKE_BUILD_TYPE})
+set(GRADLE_configureCMake configureCMake${CMAKE_BUILD_TYPE})
+set(GRADLE_buildCMake buildCMake${CMAKE_BUILD_TYPE})
+
 set(INTERNAL_BINARY_DIR_LINK "${CMAKE_BINARY_DIR}-${ANDROID_ABI}")
 get_filename_component(INTERNAL_BINARY_DIR "${INTERNAL_BINARY_DIR_LINK}" REALPATH)
 
@@ -39,16 +43,13 @@ if(NOT EXISTS ${INTERNAL_BINARY_DIR_LINK})
         file(REMOVE_RECURSE "${cache}")
     endforeach()
 
-    # call gradle configuration
-    set(GRADLE_assemble assemble${CMAKE_BUILD_TYPE})
-    set(GRADLE_configureCMake configureCMake${CMAKE_BUILD_TYPE})
-
-    execute_process(
-        COMMAND ${./}gradlew
+    execute_process(COMMAND
+        ${./}gradlew
             ${GRADLE_configureCMake}[${ANDROID_ABI}]
-            --stacktrace
+        --stacktrace
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Source/Android
         RESULT_VARIABLE result
+        USES_TERMINAL
     )
 
     if(${result})
@@ -62,4 +63,21 @@ load_cache(
     EXCLUDE
         CMAKE_TOOLCHAIN_FILE
         CMAKE_PROJECT_TOP_LEVEL_INCLUDES
+)
+
+add_custom_target(build
+    ${./}gradlew
+        ${GRADLE_buildCMake}[${ANDROID_ABI}]
+    --stacktrace    
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Source/Android
+    USES_TERMINAL
+)
+
+# TODO configure gradle to split by abi
+add_custom_target(assemble
+    ${./}gradlew
+        ${GRADLE_assemble}
+    --stacktrace
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Source/Android
+    USES_TERMINAL
 )

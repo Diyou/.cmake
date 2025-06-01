@@ -40,7 +40,8 @@
         "type": "notEquals",
         "lhs": "$env{ANDROID_HOME}",
         "rhs": ""
-      }
+      },
+      "targets": "build"
     },
     {
       "name": "debug::android",
