@@ -49,7 +49,6 @@ if(NOT EXISTS ${INTERNAL_BINARY_DIR_LINK})
         --stacktrace
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Source/Android
         RESULT_VARIABLE result
-        USES_TERMINAL
     )
 
     if(${result})
@@ -70,7 +69,6 @@ add_custom_target(build
         ${GRADLE_buildCMake}[${ANDROID_ABI}]
     --stacktrace    
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Source/Android
-    USES_TERMINAL
 )
 
 # TODO configure gradle to split by abi
@@ -79,5 +77,4 @@ add_custom_target(assemble
         ${GRADLE_assemble}
     --stacktrace
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Source/Android
-    USES_TERMINAL
 )
