@@ -64,6 +64,15 @@ macro(ALIAS target alias)
   add_library(${alias} ALIAS ${target})
 endmacro()
 
+macro(RunOnlyOnce)
+  get_filename_component(SCRIPT_NAME ${CMAKE_CURRENT_LIST_FILE} NAME_WE)
+  if(DEFINED ${SCRIPT_NAME}_INCLUDED)
+      return()
+  endif()
+  set(${SCRIPT_NAME}_INCLUDED ON)
+endmacro()
+
+
 function(AppendPath)
   set(options)
   set(oneValueArgs PATCH)

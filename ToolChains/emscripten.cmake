@@ -2,6 +2,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/clang.cmake)
 # TODO disable until functional
 unset(CMAKE_CXX_MODULE_STD)
 unset(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD)
+RunOnlyOnce()
 
 if(WIN32)
     set(emsdk "emsdk.bat")
