@@ -15,4 +15,4 @@ AND(TARGET __CMAKE::CXX23
     target_compile_definitions(.cmake PUBLIC CMAKE_IMPORT_STD=1)
 endif()
 
-add_library(.cmake::Utils ALIAS .cmake)
+ALIAS(.cmake .cmake::Utils)
