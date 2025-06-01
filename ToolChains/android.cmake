@@ -1,5 +1,6 @@
 include(${CMAKE_CURRENT_LIST_DIR}/clang.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/gradle/common.cmake)
+RunOnlyOnce()
 
 # gradle requires java
 if(DEFINED ENV{JAVA_HOME})
