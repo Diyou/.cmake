@@ -9,9 +9,7 @@ STATIC(.cmake PUBLIC
         Utils/Platform.c++
 )
 
-if( CMAKE_CXX_MODULE_STD
-AND(TARGET __CMAKE::CXX23
-    OR TARGET __CMAKE::CXX26))
+if( CMAKE_CXX_MODULE_STD)
     target_compile_definitions(.cmake PUBLIC CMAKE_IMPORT_STD=1)
 endif()
 
