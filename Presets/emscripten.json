@@ -13,7 +13,7 @@
         "conditions": [
           {
             "type": "notEquals",
-            "lhs": "$env{EMSCRIPTEN}",
+            "lhs": "$env{EMSCRIPTEN_ROOT}",
             "rhs": ""
           },
           {
@@ -48,7 +48,7 @@
         "conditions": [
           {
             "type": "notEquals",
-            "lhs": "$env{EMSCRIPTEN}",
+            "lhs": "$env{EMSCRIPTEN_ROOT}",
             "rhs": ""
           },
           {

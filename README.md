@@ -31,14 +31,14 @@ CMake configuration suite for common c++ projects
 Add this repository as a git-submodule and include [CMakePresets.json](CMakePresets.json) in the top-level project.<br>
 Cross-Compile targets are enabled via environment variables:
 
-| Target                                   |     Environment Variable      | Example                                  |
-| :--------------------------------------- | :---------------------------: | ---------------------------------------- |
-| debug<br>release                         |                               |                                          |
-| debug::clang<br>release::clang           |                               |                                          |
-| debug::emscripten<br>release::emscripten |   EMSCRIPTEN <br> EMSDK [1]   | /usr/lib/emscripten<br>.cache/emsdk      |
-| debug::android<br>release::android       | ANDROID_HOME<br>JAVA_HOME [2] | ~/Android/Sdk<br>/opt/android-studio/jbr |
+| Target                                   |      Environment Variable      | Example                                  |
+| :--------------------------------------- | :----------------------------: | ---------------------------------------- |
+| debug<br>release                         |                                |                                          |
+| debug::clang<br>release::clang           |                                |                                          |
+| debug::emscripten<br>release::emscripten | EMSCRIPTEN_ROOT <br> EMSDK [1] | /usr/lib/emscripten<br>.cache/emsdk      |
+| debug::android<br>release::android       | ANDROID_HOME<br>JAVA_HOME [2]  | ~/Android/Sdk<br>/opt/android-studio/jbr |
 
-[1] If EMSCRIPTEN is unset use existing EMSDK or install emsdk at that location<br>
+[1] If EMSCRIPTEN_ROOT is unset use existing EMSDK or install emsdk at that location<br>
 [2] Optional but preferred JDK location (fallback to system Java)
 
 ## Quick Setup:
