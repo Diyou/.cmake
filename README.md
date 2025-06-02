@@ -1,6 +1,6 @@
 # dotcmake
 
-CMake configuration suite for common c++ projects
+CMake configuration suite for common multiplatform c++ projects
 
 ## Content:
 
