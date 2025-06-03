@@ -14,23 +14,24 @@ import dotcmake;
 using namespace std;
 
 template< auto F >
-void constexpr Log(
+void inline Log(
   string_view const &text,
   source_location    current = source_location::current())
 {
   // Specialized formatter for void functions
   using VoidFunction = void (*)();
-  cout << format(
-    "[{}:{}][{}({})]\t{}\n",
+  auto const print   = format(
+    "[{}:{}][{}({})] {}\n",
     current.line(),
     current.column(),
     VoidFunction(F),
     dotcmake::GetFunctionName< F >(),
     text);
+  cout << print;
 }
 
 template< auto F >
-void constexpr Debug(
+void inline Debug(
   string_view const &text,
   source_location    current = source_location::current())
 {
@@ -40,19 +41,20 @@ void constexpr Debug(
 }
 
 // Unspecialized Log functions
-void constexpr Log(
+void inline Log(
   string_view const &text,
   source_location    current = source_location::current())
 {
-  cout << format(
-    "[{}:{}][{}]\t{}\n",
+  auto const print = format(
+    "[{}:{}][{}] {}\n",
     current.line(),
     current.column(),
     current.function_name(),
     text);
+  cout << print;
 }
 
-void constexpr Debug(
+void inline Debug(
   string_view const &text,
   source_location    current = source_location::current())
 {
