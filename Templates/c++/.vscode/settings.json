@@ -1,26 +1,23 @@
 {
-  "C_Cpp.autoAddFileAssociations" : false,
-  "C_Cpp.intelliSenseEngine" : "disabled",
-  "[cpp]" : 
-  {
-    "editor.defaultFormatter" : "llvm-vs-code-extensions.vscode-clangd",
-    "files.insertFinalNewline" : true
+  "C_Cpp.autoAddFileAssociations": false,
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "[cpp]": {
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+    "files.insertFinalNewline": true
   },
-  "[jsonc]" : 
-  {
-    "editor.defaultFormatter" : null
+  "clangd.arguments": [
+    "--header-insertion=never",
+    "--clang-tidy"
+  ],
+  "cmake.useCMakePresets": "always",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "files.exclude": {
+    ".cache": true,
+    ".cmake": true,
+    "build": true
   },
-  "clangd.arguments" : [ "--header-insertion=never", "--clang-tidy" ],
-  "clangd.path" : "/usr/bin/clangd",
-  "cmake.useCMakePresets" : "always",
-  "editor.defaultFormatter" : "esbenp.prettier-vscode",
-  "editor.formatOnSave" : true,
-  "files.exclude" : 
-  {
-    ".cache" : true,
-    "build" : true
-  },
-  "files.insertFinalNewline" : true,
-  "files.trimFinalNewlines" : true,
-  "output.smartScroll.enabled" : false
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "output.smartScroll.enabled": false
 }
