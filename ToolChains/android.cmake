@@ -23,10 +23,22 @@ if(NOT EXISTS ${ANDROID_HOME})
     message(FATAL_ERROR "No Android SDK found")
 endif()
 
-# configure cmake for specific abi
-if(NOT DEFINED ANDROID_ABI)
-    message(FATAL_ERROR "ANDROID_ABI not specified(e.g. arm64-v8a)")
+# Retrieve the abi from the connected device
+execute_process(COMMAND
+    adb shell getprop ro.product.cpu.abi
+OUTPUT_VARIABLE ABI_FILTER
+ERROR_VARIABLE ABI_FILTER_ERROR
+OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+if(ABI_FILTER_ERROR)
+    # Fallback
+    set(ABI_FILTER x86_64)
 endif()
+
+set(ANDROID_ABI ${ABI_FILTER})
+
+# configure cmake for specific abi
 list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES ANDROID_ABI)
 
 set(GRADLE_assemble assemble${CMAKE_BUILD_TYPE})
@@ -46,7 +58,8 @@ if(NOT EXISTS ${INTERNAL_BINARY_DIR_LINK})
 
     execute_process(COMMAND
         ${./}gradlew
-            ${GRADLE_configureCMake}[${ANDROID_ABI}]
+            ${GRADLE_configureCMake}
+        -Pandroid.injected.build.abi=${ABI_FILTER}
         --stacktrace
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Source/Android
         RESULT_VARIABLE result
@@ -65,17 +78,10 @@ load_cache(
         CMAKE_PROJECT_TOP_LEVEL_INCLUDES
 )
 
-add_custom_target(build
-    ${./}gradlew
-        ${GRADLE_buildCMake}[${ANDROID_ABI}]
-    --stacktrace    
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Source/Android
-)
-
-# TODO configure gradle to split by abi
 add_custom_target(assemble
     ${./}gradlew
         ${GRADLE_assemble}
-    --stacktrace
+    --Pandroid.injected.build.abi=${ABI_FILTER}
+    --stacktrace    
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Source/Android
 )

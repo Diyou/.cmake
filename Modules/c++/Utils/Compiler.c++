@@ -3,6 +3,7 @@ module;
 export module dotcmake:Compiler;
 
 namespace dotcmake {
+
 export struct Compiler
 {
   /// @brief Has Debug Symbols
@@ -45,4 +46,5 @@ export struct Compiler
     false;
 #endif
 };
+
 }

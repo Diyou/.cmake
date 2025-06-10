@@ -9,46 +9,47 @@ import std;
 #endif
 
 namespace std {
-export
+
+export {
+// Enable generic function pointer types for format()
+using VoidFunctionPtr = void (*)();
+
+template<> struct formatter< VoidFunctionPtr, char >
 {
-  // Enable generic function pointer types for format()
-  using VoidFunctionPtr = void (*)();
+  constexpr static char        default_presentation = 'x';
+  constexpr static string_view supported            = "xX";
+  char                         presentation         = default_presentation;
 
-  template<> struct formatter< VoidFunctionPtr, char >
+  constexpr auto
+  parse(format_parse_context &ctx)
   {
-    constexpr static char        default_presentation = 'x';
-    constexpr static string_view supported            = "xX";
-    char                         presentation         = default_presentation;
+    format_parse_context::iterator iter = ctx.begin();
 
-    constexpr auto
-    parse(format_parse_context &ctx)
-    {
-      format_parse_context::iterator iter = ctx.begin();
-
-      if (iter != ctx.end() && *iter != '}') {
-        char const chr = *iter++;
-        presentation   = supported.contains(chr) ? chr : default_presentation;
-      }
-
-      // Ignore any extra characters after the format specifier
-      while (iter != ctx.end() && *iter != '}') {
-        ++iter;
-      }
-
-      return iter;
+    if (iter != ctx.end() && *iter != '}') {
+      char const chr = *iter++;
+      presentation   = supported.contains(chr) ? chr : default_presentation;
     }
 
-    auto
-    format(VoidFunctionPtr ptr, format_context &ctx) const
-    {
-      auto value = reinterpret_cast< uintptr_t >(ptr);
-
-      if (presentation == 'X') {
-        return format_to(ctx.out(), "0x{:X}", value);
-      }
-
-      return format_to(ctx.out(), "0x{:x}", value);
+    // Ignore any extra characters after the format specifier
+    while (iter != ctx.end() && *iter != '}') {
+      ++iter;
     }
-  };
+
+    return iter;
+  }
+
+  auto
+  format(VoidFunctionPtr ptr, format_context &ctx) const
+  {
+    auto value = reinterpret_cast< uintptr_t >(ptr);
+
+    if (presentation == 'X') {
+      return format_to(ctx.out(), "0x{:X}", value);
+    }
+
+    return format_to(ctx.out(), "0x{:x}", value);
+  }
+};
 }
+
 }

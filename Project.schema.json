@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "dotcmake's Project configuration Schema",
+  "type": "object",
+  "properties": {
+    "Project": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": "MyProject"
+        },
+        "id": {
+          "type": "string",
+          "default": "org.dotcmake.myproject"
+        },
+        "version": {
+          "type": "string",
+          "default": "0.0.1"
+        },
+        "url": {
+          "type": "string",
+          "default": "https://github.com/Diyou/.cmake"
+        },
+        "description": {
+          "type": "string",
+          "default": "My awesome c++ project with .cmake"
+        }
+      },
+      "required": ["name", "id", "version"]
+    }
+  },
+  "required": ["Project"]
+}

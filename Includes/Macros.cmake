@@ -72,6 +72,13 @@ macro(RunOnlyOnce)
   set(${SCRIPT_NAME}_INCLUDED ON)
 endmacro()
 
+macro(CacheInternal variable)
+  set(${variable} "${${variable}}" CACHE INTERNAL "")
+endmacro()
+
+macro(CacheString variable description)
+  set(${variable} "${${variable}}" CACHE STRING "${description}")
+endmacro()
 
 function(AppendPath)
   set(options)
@@ -92,6 +99,11 @@ macro(AddQuotes var)
     set(${var} "\"${${var}}\"")
   endif()
 endmacro()
+
+function(GetJSON json key value)
+  string(JSON ${value} ERROR_VARIABLE error GET "${json}" "${key}")
+  set(${value} ${${value}} PARENT_SCOPE)
+endfunction()
 
 function(SetJSON json key value)
   if(NOT json)

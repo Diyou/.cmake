@@ -9,6 +9,7 @@ module;
 export module dotcmake:Platform;
 
 namespace dotcmake {
+
 export struct Platform
 {
   constexpr static bool Android =
@@ -56,4 +57,5 @@ export struct Platform
   constexpr static bool MOBILE  = IOS || Android;
   constexpr static bool DESKTOP = !MOBILE;
 };
+
 }

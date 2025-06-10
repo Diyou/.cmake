@@ -1,4 +1,3 @@
-include(${CMAKE_CURRENT_LIST_DIR}/common.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/default.cmake)
 
 set(ENV{CC} clang)

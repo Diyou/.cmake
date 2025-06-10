@@ -62,6 +62,7 @@ to_array(string_view const &view)
 }
 
 namespace dotcmake {
+
 export template< auto Function >
 constexpr string_view
 GetFunctionName()
@@ -75,4 +76,5 @@ GetFunctionName()
 
   return {buffer.data(), name.size()};
 }
+
 }

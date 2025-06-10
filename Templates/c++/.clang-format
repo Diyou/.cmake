@@ -1,4 +1,5 @@
 ---
+# Requires clang-format > 20
 Language: Cpp
 BasedOnStyle: Mozilla
 Standard: Latest
@@ -7,6 +8,7 @@ UseTab: Never
 TabWidth: 2
 IndentWidth: 2
 IndentPPDirectives: AfterHash
+IndentExportBlock: false
 ConstructorInitializerIndentWidth: 0
 PackConstructorInitializers: Never
 LineEnding: LF
@@ -15,6 +17,7 @@ KeepEmptyLines:
   AtStartOfBlock: false
   AtStartOfFile: false
 MaxEmptyLinesToKeep: 1
+RemoveEmptyLinesInUnwrappedLines: true
 SeparateDefinitionBlocks: Always
 InsertNewlineAtEOF: true
 InsertBraces: true
@@ -29,12 +32,13 @@ AlignConsecutiveDeclarations:
   Enabled: true
   AcrossEmptyLines: true
   AcrossComments: true
-  #AlignFunctionDeclarations: true clang-format 20
+  AlignFunctionDeclarations: true
 AlignConsecutiveBitFields:
   Enabled: true
   AcrossEmptyLines: true
   AcrossComments: true
 AlignEscapedNewlines: LeftWithLastLine
+WrapNamespaceBodyWithEmptyLines: Always
 QualifierAlignment: Right
 PointerAlignment: Right
 ReferenceAlignment: Pointer
@@ -45,6 +49,7 @@ BreakAdjacentStringLiterals: true
 BreakAfterAttributes: Always
 BreakAfterReturnType: All
 BreakBeforeBinaryOperators: NonAssignment
+BreakBinaryOperations: RespectPrecedence
 BreakFunctionDefinitionParameters: false
 BreakTemplateDeclarations: MultiLine
 BreakBeforeBraces: Custom
@@ -58,7 +63,7 @@ BraceWrapping:
   AfterObjCDeclaration: true
   AfterStruct: true
   AfterUnion: false
-  AfterExternBlock: true
+  AfterExternBlock: false
   BeforeCatch: true
   BeforeElse: true
   BeforeLambdaBody: false
