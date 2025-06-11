@@ -36,9 +36,9 @@ android {
         val configFile = File(sourceRoot, "Project.json")
 
         val config: Config = CMake.readConfig(configFile)
-        applicationId = config.Project.id
-        versionName = config.Project.version
-        resValue("string", "app_name", config.Project.name)
+        applicationId = config.Project.ID
+        versionName = config.Project.Version
+        resValue("string", "app_name", config.Project.Name)
 
         externalNativeBuild {
             cmake {

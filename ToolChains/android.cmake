@@ -65,6 +65,7 @@ if(NOT EXISTS ${INTERNAL_BINARY_DIR_LINK})
             ${GRADLE_configureCMake}
         -Pandroid.injected.build.abi=${ANDROID_ABI}
         --stacktrace
+        COMMENT "gradlew ${GRADLE_configureCMake}"
         WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/Android
         RESULT_VARIABLE result
     )

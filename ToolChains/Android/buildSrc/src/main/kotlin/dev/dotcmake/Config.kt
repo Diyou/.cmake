@@ -6,11 +6,11 @@ import java.io.FileNotFoundException
 
 @Serializable
 data class Project(
-    val name: String,
-    val id: String,
-    val version: String,
-    val description: String? = null,
-    val url: String? = null
+    val Name: String,
+    val ID: String,
+    val Version: String,
+    val Description: String? = null,
+    val URL: String? = null
 )
 @Serializable
 data class Config(val Project: Project)

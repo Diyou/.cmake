@@ -1,10 +1,10 @@
 {
   "$schema": ".cmake/Project.schema.json",
   "Project": {
-    "name": "HelloWorld",
-    "id": "org.hello.world",
-    "version": "0.0.1",
-    "description": "Hello World C++",
-    "url": "https://en.wikipedia.org/wiki/%22Hello,_World!%22_program"
+    "Name": "HelloWorld",
+    "ID": "org.hello.world",
+    "Version": "0.0.1",
+    "Description": "Hello World C++",
+    "URL": "https://en.wikipedia.org/wiki/%22Hello,_World!%22_program"
   }
 }

@@ -6,28 +6,28 @@
     "Project": {
       "type": "object",
       "properties": {
-        "name": {
+        "Name": {
           "type": "string",
           "default": "MyProject"
         },
-        "id": {
+        "ID": {
           "type": "string",
           "default": "org.dotcmake.myproject"
         },
-        "version": {
+        "Version": {
           "type": "string",
           "default": "0.0.1"
         },
-        "url": {
+        "URL": {
           "type": "string",
           "default": "https://github.com/Diyou/.cmake"
         },
-        "description": {
+        "Description": {
           "type": "string",
           "default": "My awesome c++ project with .cmake"
         }
       },
-      "required": ["name", "id", "version"]
+      "required": ["Name", "ID", "Version"]
     }
   },
   "required": ["Project"]
