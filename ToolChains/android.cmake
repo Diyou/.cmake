@@ -24,34 +24,38 @@ if(NOT EXISTS ${ANDROID_HOME})
 endif()
 
 # Retrieve the abi from the connected device
-execute_process(COMMAND
-    adb shell getprop ro.product.cpu.abi
-OUTPUT_VARIABLE ABI_FILTER
-ERROR_VARIABLE ABI_FILTER_ERROR
-OUTPUT_STRIP_TRAILING_WHITESPACE
+execute_process(COMMAND adb shell getprop ro.product.cpu.abi
+    OUTPUT_VARIABLE ANDROID_ABI
+    ERROR_VARIABLE ANDROID_ABI_ERROR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-if(ABI_FILTER_ERROR)
-    # Fallback
-    set(ABI_FILTER x86_64)
+# Fallback
+if(ANDROID_ABI_ERROR)
+    set(ANDROID_ABI x86_64)
 endif()
 
-set(ANDROID_ABI ${ABI_FILTER})
-
-# configure cmake for specific abi
-list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES ANDROID_ABI)
-
+# configure and build single abi apk
 set(GRADLE_assemble assemble${CMAKE_BUILD_TYPE})
 set(GRADLE_configureCMake configureCMake${CMAKE_BUILD_TYPE})
 set(GRADLE_buildCMake buildCMake${CMAKE_BUILD_TYPE})
 
-set(INTERNAL_BINARY_DIR_LINK "${CMAKE_BINARY_DIR}-${ANDROID_ABI}")
+if(NOT ANDROID_LINK_ROOT)
+    set(ANDROID_LINK_ROOT "${CMAKE_BINARY_DIR}")
+endif()
+
+list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
+    ANDROID_ABI
+    ANDROID_LINK_ROOT
+)
+
+set(INTERNAL_BINARY_DIR_LINK "${ANDROID_LINK_ROOT}-${ANDROID_ABI}")
 get_filename_component(INTERNAL_BINARY_DIR "${INTERNAL_BINARY_DIR_LINK}" REALPATH)
 
 # sync with gradle
 if(NOT EXISTS ${INTERNAL_BINARY_DIR_LINK})
     # trigger reconfiguration
-    file(GLOB caches ${CMAKE_SOURCE_DIR}/Source/Android/app/.cxx/${CMAKE_BUILD_TYPE}/*/${ANDROID_ABI})
+    file(GLOB caches ${CMAKE_CURRENT_LIST_DIR}/Android/app/.cxx/${CMAKE_BUILD_TYPE}/*/${ANDROID_ABI})
     foreach(cache ${caches})
         file(REMOVE_RECURSE "${cache}")
     endforeach()
@@ -59,9 +63,9 @@ if(NOT EXISTS ${INTERNAL_BINARY_DIR_LINK})
     execute_process(COMMAND
         ${./}gradlew
             ${GRADLE_configureCMake}
-        -Pandroid.injected.build.abi=${ABI_FILTER}
+        -Pandroid.injected.build.abi=${ANDROID_ABI}
         --stacktrace
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Source/Android
+        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/Android
         RESULT_VARIABLE result
     )
 
@@ -78,10 +82,12 @@ load_cache(
         CMAKE_PROJECT_TOP_LEVEL_INCLUDES
 )
 
-add_custom_target(assemble
+add_custom_target(assemble COMMAND
     ${./}gradlew
         ${GRADLE_assemble}
-    --Pandroid.injected.build.abi=${ABI_FILTER}
-    --stacktrace    
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Source/Android
+    -Pandroid.injected.build.abi=${ANDROID_ABI}
+    --stacktrace
+    COMMENT "gradlew ${GRADLE_assemble}"
+    JOB_POOL console   
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/Android
 )
