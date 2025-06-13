@@ -37,19 +37,20 @@
         "type": "notEquals",
         "lhs": "$env{ANDROID_HOME}",
         "rhs": ""
-      },
-      "targets": "assemble"
+      }
     },
+    { "name": "assemble::android", "hidden": true, "targets": "assemble" },
+    { "name": "bundle::android", "hidden": true, "targets": "bundle" },
     {
       "name": "debug::android",
       "displayName": "Debug",
-      "inherits": ["common::android"],
+      "inherits": ["common::android", "assemble::android"],
       "configurePreset": "debug::android"
     },
     {
       "name": "release::android",
       "displayName": "Release",
-      "inherits": ["common::android"],
+      "inherits": ["common::android", "assemble::android"],
       "configurePreset": "release::android"
     }
   ]

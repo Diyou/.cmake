@@ -48,7 +48,7 @@ macro(MODULE name)
 endmacro()
 
 # Shorthand for add_executable(name)
-macro(EXE name)
+function(EXE name)
   if(ANDROID)
     DLL(${name} ${ARGN})
     set_target_properties(${name} PROPERTIES
@@ -57,8 +57,23 @@ macro(EXE name)
   else()
     add_executable(${name} WIN32)
     _add_sources(${name} ${ARGN})
+    if(EMSCRIPTEN)
+      set(EMSCRIPTEN_SHELL "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../ToolChains/EmscriptenShell.html")
+      target_link_options(${name}
+        PRIVATE
+          -sENVIRONMENT=web
+          --shell-file=${EMSCRIPTEN_SHELL}
+        $<$<CONFIG:Debug>:
+          --emrun
+        >  
+      )
+      set_target_properties(${name} PROPERTIES
+          SUFFIX .html
+          LINK_DEPENDS ${EMSCRIPTEN_SHELL}
+      )
+    endif()
   endif()
-endmacro()
+endfunction()
 
 macro(ALIAS target alias)
   add_library(${alias} ALIAS ${target})

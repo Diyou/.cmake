@@ -1,0 +1,27 @@
+{
+    /*
+@COPY_REMARK@*/
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug with emrun",
+            "type": "node",
+            "request": "launch",
+            "program": "./emrun",
+            "runtimeExecutable": "bash",
+            "windows": {
+                "program": "emrun",
+                "runtimeExecutable": "cmd"
+            },
+            "args": [
+                "--hostname=localhost",
+                "--no_browser",
+                "${command:cmake.getLaunchTargetDirectory}"
+            ],
+            "cwd": "@EMSCRIPTEN_ROOT@",
+            "envFile": "${command:cmake.buildDirectory}/debug.env",
+            "console": "integratedTerminal",
+            "preLaunchTask": "CMake: build",
+        }
+    ]
+}

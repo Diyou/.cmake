@@ -1,9 +1,9 @@
 ---
 Checks: >
-  bugprone*,
-  modernize*,
-  performance*,
-  readability*,
+  bugprone-*,
+  modernize-*,
+  performance-*,
+  readability-*,
   -bugprone-easily-swappable-parameters,
   -modernize-use-trailing-return-type,
   -modernize-use-designated-initializers,

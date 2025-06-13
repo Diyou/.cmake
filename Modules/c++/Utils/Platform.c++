@@ -19,7 +19,7 @@ export struct Platform
     false;
 #endif
 
-  constexpr static bool WASM =
+  constexpr static bool Web =
 #ifdef __EMSCRIPTEN__
     true;
 #else
@@ -35,7 +35,7 @@ export struct Platform
 
   constexpr static bool Linux =
 #ifdef __linux__
-    !Android && !WASM;
+    !Android && !Web;
 #else
     false;
 #endif

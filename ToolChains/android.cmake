@@ -36,9 +36,10 @@ if(ANDROID_ABI_ERROR)
 endif()
 
 # configure and build single abi apk
-set(GRADLE_assemble assemble${CMAKE_BUILD_TYPE})
 set(GRADLE_configureCMake configureCMake${CMAKE_BUILD_TYPE})
 set(GRADLE_buildCMake buildCMake${CMAKE_BUILD_TYPE})
+set(GRADLE_assemble assemble${CMAKE_BUILD_TYPE})
+set(GRADLE_bundle bundle${CMAKE_BUILD_TYPE})
 
 if(NOT ANDROID_LINK_ROOT)
     set(ANDROID_LINK_ROOT "${CMAKE_BINARY_DIR}")
@@ -89,6 +90,15 @@ add_custom_target(assemble COMMAND
     -Pandroid.injected.build.abi=${ANDROID_ABI}
     --stacktrace
     COMMENT "gradlew ${GRADLE_assemble}"
+    JOB_POOL console   
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/Android
+)
+
+add_custom_target(bundle COMMAND
+    ${./}gradlew
+        ${GRADLE_bundle}
+    --stacktrace
+    COMMENT "gradlew ${GRADLE_bundle}"
     JOB_POOL console   
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/Android
 )

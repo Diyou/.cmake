@@ -1,12 +1,19 @@
 {
+    /*
+@COPY_REMARK@*/
     "version": "0.2.0",
     "configurations": [
         {
             "type": "android",
             "request": "launch",
             "name": "Android Launch",
-            "appSrcRoot": "${command:cmake.getLaunchTargetDirectory}",
-            "apkFile": "${command:cmake.launchTargetPath}", 
+            "appSrcRoot": "${workspaceRoot}/.cmake/ToolChains/Android/app/src/main",
+            "apkFile": "${workspaceRoot}/.cmake/ToolChains/Android/app/build/intermediates/apk/debug/app-debug.apk",
+            "pmInstallArgs": [
+                "-t",   // Test apk
+                "-r",   // Replace apk
+                "-g"    // grant all runtime permissions
+            ],
             "preLaunchTask": "CMake: build",
         }
     ]

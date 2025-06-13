@@ -2,6 +2,9 @@
 CompileFlags:
   Compiler: '@CMAKE_CXX_COMPILER@'
   CompilationDatabase: '@CMAKE_BINARY_DIR@'
+  Remove: [
+    -sUSE*
+  ] 
 
 Hover:
   ShowAKA: Yes

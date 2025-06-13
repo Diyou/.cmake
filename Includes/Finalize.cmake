@@ -3,6 +3,8 @@ function(ConfigureVScode)
 
     if(CMAKE_SYSTEM_NAME STREQUAL Android)
         set(profile Android)
+    elseif(EMSCRIPTEN)
+        set(profile Emscripten)
     elseif(CMAKE_CXX_COMPILER_ID MATCHES Clang)
         set(profile Clang)
     else()
