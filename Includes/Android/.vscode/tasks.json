@@ -1,0 +1,74 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "logcat start",
+            "hide": true,
+            "type": "shell",
+            "command": "adb logcat -c && echo 'adb logcat:' && adb logcat -v color | grep SDL",
+            "windows": {
+                "command": "adb logcat -c && echo 'adb logcat:' && adb logcat -v color | findstr 'SDL'"
+            },
+            "dependsOn": [
+                "CMake: build"
+            ],
+            "isBackground": true,
+            "problemMatcher": [
+                {
+                    "pattern": [
+                        {
+                            "regexp": ".*",
+                            "file": 1,
+                            "location": 2,
+                            "message": 3
+                        }
+                    ],
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": ".*",
+                        "endsPattern": ".*"
+                    }
+                }
+            ],
+            "presentation": {
+                "echo": false,
+                "panel": "shared",
+                "reveal": "always",
+                "focus": false,
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "logcat end",
+            "hide": true,
+            "type": "shell",
+            "command": "pgrep -f 'adb logcat' | xargs kill",
+            "windows": {
+                "command": "Get-CimInstance Win32_Process -Filter \"Name='adb.exe' AND CommandLine LIKE '%logcat%'\" | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }",
+                "options": {
+                    "shell": {
+                        "executable": "powershell.exe",
+                        "args": [
+                            "-NoProfile",
+                            "-ExecutionPolicy",
+                            "Bypass"
+                        ]
+                    }
+                },
+            },
+            "group": "none",
+            "presentation": {
+                "echo": false,
+                "showReuseMessage": false,
+                "close": true,
+                "reveal": "never",
+                "panel": "shared"
+            }
+        }
+    ]
+}

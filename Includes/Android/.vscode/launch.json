@@ -14,7 +14,8 @@
                 "-r",   // Replace apk
                 "-g"    // grant all runtime permissions
             ],
-            "preLaunchTask": "CMake: build",
+            "preLaunchTask": "logcat start",
+            "postDebugTask": "logcat end"
         }
     ]
 }
