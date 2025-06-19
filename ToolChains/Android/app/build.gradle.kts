@@ -14,7 +14,7 @@ plugins {
 android {
     namespace = "com.diyou.dotcmake"
     compileSdk = 36
-    ndkVersion = "29.0.13113456"
+    ndkVersion = "29.0.13599879"
 
     val sourceRoot: File = rootProject.file("../../..")
 
