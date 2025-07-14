@@ -5,6 +5,7 @@
   "properties": {
     "Project": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "Name": {
           "type": "string",
@@ -28,6 +29,55 @@
         }
       },
       "required": ["Name", "ID", "Version"]
+    },
+    "Depends": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": { "type": "string", "enum": ["git"] },
+              "repository": { "type": "string" },
+              "tag": { "type": "string" },
+              "shallow":{"type":"boolean", "default": false},
+              "Config": {
+                "type": "string",
+                "description": "CMake configuration file relative to project root"
+              },
+              "Patch": {
+                "type": "string",
+                "description": "CMake patch file relative to project root"
+              }
+            },
+            "required": ["type", "repository", "tag"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": { "type": "string", "enum": ["archive"] },
+              "url": { "type": "string" },
+              "Config": {
+                "type": "string",
+                "description": "CMake configuration file relative to project root"
+              },
+              "Patch": {
+                "type": "string",
+                "description": "CMake patch file relative to project root"
+              }
+            },
+            "required": ["type", "url"]
+          }
+        ]
+      },
+      "default": [
+        {
+          "type": "git"
+        }
+      ]
     }
   },
   "required": ["Project"]
