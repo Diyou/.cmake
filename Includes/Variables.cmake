@@ -1,3 +1,6 @@
+# PROJECT_ROOT
+get_filename_component(PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+
 # ./
 if(WIN32)
     set(./ "")
