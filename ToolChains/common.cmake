@@ -14,7 +14,6 @@ list(APPEND CMAKE_MODULE_PATH
 include(${CMAKE_CURRENT_LIST_DIR}/../Options.cmake)
 
 # Includes in specific order
-unset(INCLUDES)
 list(APPEND INCLUDES
     #[[Essential]]
     "Variables"
