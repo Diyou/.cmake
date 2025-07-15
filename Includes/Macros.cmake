@@ -178,3 +178,19 @@ set(COPY_REMARK "\
 ")
 configure_file(${FILE_IN} ${FILE_OUT} @ONLY NEWLINE_STYLE UNIX)
 endfunction()
+
+macro(Download url destination result)
+  file(DOWNLOAD "${url}" "${destination}"
+    SHOW_PROGRESS
+    STATUS ${result}
+  )
+endmacro()
+
+macro(Extract archive destination result)
+  file(ARCHIVE_EXTRACT
+    INPUT "${archive}"
+    DESTINATION "${destination}"
+    VERBOSE
+    STATUS ${result}
+  )
+endmacro()
