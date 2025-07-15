@@ -13,8 +13,18 @@ get_filename_component(PROJECT_ROOT ${CMAKE_CURRENT_LIST_DIR}/../.. ABSOLUTE)
 # Support options
 include(${CMAKE_CURRENT_LIST_DIR}/../Options.cmake)
 
-# Includes
-file(GLOB includes ${CMAKE_CURRENT_LIST_DIR}/../Includes/*.cmake)
-foreach(in ${includes})
-    include(${in})
+# Includes in specific order
+unset(INCLUDES)
+list(APPEND INCLUDES
+    #[[Essential]]
+    "Variables"
+    "Macros"
+    "Properties"
+    #[[Features]]
+    "Project.json"
+    "Debug"
+    "Finalize"
+)
+foreach(in ${INCLUDES})
+    include("${CMAKE_CURRENT_LIST_DIR}/../Includes/${in}.cmake")
 endforeach()
