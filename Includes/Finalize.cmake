@@ -1,3 +1,4 @@
+include_guard(GLOBAL)
 function(ConfigureVScode)
     list(JOIN DEBUG_ARGS [[", "]] DEBUG_ARGS)
 

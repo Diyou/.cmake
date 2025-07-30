@@ -1,7 +1,6 @@
 set(CACHE_DIR_RELATIVE .cache)
 set(CACHE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${CACHE_DIR_RELATIVE})
 
-find_package(Git REQUIRED)
 include(FetchContent)
 
 function(_add_sources target)
@@ -80,7 +79,7 @@ macro(ALIAS target alias)
 endmacro()
 
 macro(RunOnlyOnce)
-  get_filename_component(SCRIPT_NAME ${CMAKE_CURRENT_LIST_FILE} NAME_WE)
+  cmake_path(GET CMAKE_CURRENT_LIST_FILE STEM SCRIPT_NAME)
   if(DEFINED ${SCRIPT_NAME}_INCLUDED)
       return()
   endif()
@@ -118,6 +117,19 @@ endmacro()
 function(GetJSON json key value)
   string(JSON ${value} ERROR_VARIABLE error GET "${json}" "${key}")
   set(${value} ${${value}} PARENT_SCOPE)
+endfunction()
+
+function(GetJSONArray json value)
+  unset(array)
+  string(JSON elements LENGTH "${json}")
+  if(elements GREATER 0)
+    math(EXPR LAST_INDEX "${elements} - 1")
+    foreach(INDEX RANGE 0 ${LAST_INDEX})
+      string(JSON element GET "${json}" ${INDEX})
+      list(APPEND array "${element}")
+    endforeach()
+  endif()
+  set(${value} "${array}" PARENT_SCOPE)
 endfunction()
 
 function(SetJSON json key value)
@@ -179,18 +191,21 @@ set(COPY_REMARK "\
 configure_file(${FILE_IN} ${FILE_OUT} @ONLY NEWLINE_STYLE UNIX)
 endfunction()
 
-macro(Download url destination result)
-  file(DOWNLOAD "${url}" "${destination}"
-    SHOW_PROGRESS
-    STATUS ${result}
+function(Download url destination result)
+  message("Downloading ${url}...")
+  file(DOWNLOAD "${url}" "${destination}" 
+#    SHOW_PROGRESS
+    TLS_VERIFY ON
+    STATUS status
   )
-endmacro()
+  set(${result} ${status} PARENT_SCOPE)
+endfunction()
 
-macro(Extract archive destination result)
+function(Extract archive destination)
+  message("Extracting ${archive}...")
   file(ARCHIVE_EXTRACT
     INPUT "${archive}"
     DESTINATION "${destination}"
-    VERBOSE
-    STATUS ${result}
+#    VERBOSE
   )
-endmacro()
+endfunction()
