@@ -20,7 +20,7 @@
         "CMAKE_BUILD_TYPE": "Debug"
       },
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "$env{CMAKE_BUILD_TYPE}"
+        "CMAKE_BUILD_TYPE": "Debug"
       },
       "binaryDir": "build/$env{CMAKE_BUILD_TYPE}-${hostSystemName}",
       "hidden": true
@@ -37,7 +37,7 @@
         "CMAKE_BUILD_TYPE": "Release"
       },
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "$env{CMAKE_BUILD_TYPE}"
+        "CMAKE_BUILD_TYPE": "Release"
       },
       "binaryDir": "build/$env{CMAKE_BUILD_TYPE}-${hostSystemName}",
       "hidden": true
