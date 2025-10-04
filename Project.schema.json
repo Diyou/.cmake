@@ -31,54 +31,57 @@
       "required": ["Name", "ID", "Version"]
     },
     "Depends": {
-      "type": "array",
+      "type": "object",
       "uniqueItems": true,
-      "items": {
-        "oneOf": [
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "type": { "type": "string", "enum": ["git"] },
-              "url": { "type": "string" },
-              "tag": { "type": "string" },
-              "shallow": { "type": "boolean", "default": false },
-              "config": {
-                "type": "string",
-                "description": "CMake configuration file relative to project root"
+      "additionalProperties": false,
+      "patternProperties": {
+        "^.*$": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "type": { "type": "string", "enum": ["archive"] },
+                "url": { "type": "string" },
+                "sha256": {
+                  "type": "string",
+                  "description": "Confirm hash before extracting"
+                }
               },
-              "patch": {
-                "type": "string",
-                "description": "CMake patch file relative to project root"
-              }
+              "required": ["type", "url"]
             },
-            "required": ["type", "url", "tag"]
+            {
+              "type": "object",
+              "properties": {
+                "type": { "type": "string", "enum": ["git"] },
+                "url": { "type": "string", "description": "Git URL" },
+                "tag": {
+                  "type": "string",
+                  "description": "Tag or Hash to checkout"
+                },
+                "shallow": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Shallow clone"
+                }
+              },
+              "required": ["type", "url", "tag"]
+            }
+          ],
+          "properties": {
+            "config": {
+              "type": "string",
+              "description": "CMake configuration file to include before add_subdirectory"
+            },
+            "patch": {
+              "type": "string",
+              "description": "CMake patch file to execute after setup/update"
+            }
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "type": { "type": "string", "enum": ["archive"] },
-              "name": { "type": "string" },
-              "url": { "type": "string" },
-              "config": {
-                "type": "string",
-                "description": "CMake configuration file relative to project root"
-              },
-              "patch": {
-                "type": "string",
-                "description": "CMake patch file relative to project root"
-              }
-            },
-            "required": ["type", "name", "url"]
+          "default": {
+            "type": "git"
           }
-        ]
-      },
-      "default": [
-        {
-          "type": "git"
         }
-      ]
+      }
     }
   },
   "required": ["Project"]

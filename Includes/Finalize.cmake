@@ -39,7 +39,7 @@ function(ConfigureVScode)
     endif()
 endfunction()
 
-function(Finalize)
+function(_DOTCMAKE_FINALIZE)
     # Generate env file for debuggin
     list(JOIN DEBUG_ENV \n DEBUG_ENV)
     file(GENERATE
@@ -58,4 +58,4 @@ function(Finalize)
      endif()
 endfunction()
 
-cmake_language(DEFER CALL Finalize)
+cmake_language(DEFER CALL _DOTCMAKE_FINALIZE)

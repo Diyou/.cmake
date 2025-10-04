@@ -1,5 +1,8 @@
 include_guard(GLOBAL)
 
+if(PROJECT_IS_TOP_LEVEL
+AND NOT ${PROJECT_NAME} STREQUAL CMAKE_TRY_COMPILE)
+
 # Requirement
 find_package(Git REQUIRED)
 
@@ -28,6 +31,7 @@ endforeach()
 
 # Project.json.cmake needs to be included after the project() call
 set(CMAKE_PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/../Includes/Project.json.cmake")
+endif()
 
 # Prevent Warning: Manually-specified variables were not used by the project:
 if(CMAKE_TOOLCHAIN_FILE)

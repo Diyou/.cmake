@@ -114,9 +114,38 @@ macro(AddQuotes var)
   endif()
 endmacro()
 
+function(ValidJSON json outVar)
+  string(JSON elements ERROR_VARIABLE error LENGTH "${${json}}")
+  if(error)
+    set(${outVar} false PARENT_SCOPE)
+  else()
+    set(${outVar} true PARENT_SCOPE)
+  endif()
+endfunction()
+
+function(EqualJSON left right outVar)
+  string(JSON equals ERROR_VARIABLE error EQUAL "${${left}}" "${${right}}")
+  if(error OR NOT equals)
+    set(${outVar} false PARENT_SCOPE)
+  else()
+    set(${outVar} true PARENT_SCOPE)
+  endif()
+endfunction()
+
 function(GetJSON json key value)
-  string(JSON ${value} ERROR_VARIABLE error GET "${json}" "${key}")
+  string(JSON ${value} ERROR_VARIABLE error GET "${${json}}" "${key}")
   set(${value} ${${value}} PARENT_SCOPE)
+endfunction()
+
+function(GetJSONKeys json keysOut)
+  string(JSON item_count LENGTH "${${json}}")
+  set(items "")
+  math(EXPR end "${item_count} - 1")
+  foreach(i RANGE ${end})
+    string(JSON key MEMBER "${${json}}" ${i})
+    list(APPEND items ${key})
+  endforeach()
+  set(${keysOut} ${items} PARENT_SCOPE)
 endfunction()
 
 function(GetJSONArray json value)
@@ -202,10 +231,45 @@ function(Download url destination result)
 endfunction()
 
 function(Extract archive destination)
-  message("Extracting ${archive}...")
+  message("Extracting ${${archive}} ...")
   file(ARCHIVE_EXTRACT
-    INPUT "${archive}"
-    DESTINATION "${destination}"
+    INPUT "${${archive}}"
+    DESTINATION "${${destination}}"
 #    VERBOSE
   )
+endfunction()
+
+function(GitTag dir outVar)
+  execute_process(COMMAND ${GIT_EXECUTABLE}
+          describe --tags --exact-match
+          WORKING_DIRECTORY "${dir}"
+          OUTPUT_VARIABLE out
+          RESULT_VARIABLE result
+          ERROR_QUIET
+          OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+  if(result EQUAL 0)
+    set(${outVar} ${out} PARENT_SCOPE)
+    return()
+  endif()
+  execute_process(COMMAND ${GIT_EXECUTABLE}
+          rev-parse HEAD
+          WORKING_DIRECTORY "${dir}"
+          OUTPUT_VARIABLE out
+          RESULT_VARIABLE result
+          ERROR_QUIET
+          OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+  set(${outVar} ${out} PARENT_SCOPE)
+endfunction()
+
+function(EQUALS_SHA256 file hash outVar)
+  file(SHA256 "${${file}}" file_hash)
+  string(REPLACE sha256: "" hash "${${hash}}")
+
+  if(file_hash STREQUAL hash)
+    set(${outVar} true PARENT_SCOPE)
+  else()
+    set(${outVar} false PARENT_SCOPE)
+  endif()
 endfunction()
