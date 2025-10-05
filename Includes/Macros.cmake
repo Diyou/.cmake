@@ -64,7 +64,7 @@ function(EXE name)
           --shell-file=${EMSCRIPTEN_SHELL}
         $<$<CONFIG:Debug>:
           --emrun
-        >  
+        >
       )
       set_target_properties(${name} PROPERTIES
           SUFFIX .html
@@ -103,7 +103,7 @@ function(AppendPath)
 
   set(_PATH ${__BEFORE} $ENV{PATH} ${__AFTER})
   cmake_path(CONVERT "${_PATH}" TO_NATIVE_PATH_LIST _PATH NORMALIZE)
-  set(ENV{PATH} "${_PATH}") 
+  set(ENV{PATH} "${_PATH}")
 endfunction()
 
 macro(AddQuotes var)
@@ -172,12 +172,12 @@ function(SetJSON json key value)
   endif()
 
   if("${value}" STREQUAL "")
-    string( JSON ${json} 
+    string( JSON ${json}
             REMOVE "${${json}}"
             "${key}"
     )
   else()
-    string( JSON ${json} 
+    string( JSON ${json}
             SET "${${json}}"
             "${key}"
             "${value}"
@@ -222,7 +222,7 @@ endfunction()
 
 function(Download url destination result)
   message("Downloading ${url}...")
-  file(DOWNLOAD "${url}" "${destination}" 
+  file(DOWNLOAD "${url}" "${destination}"
 #    SHOW_PROGRESS
     TLS_VERIFY ON
     STATUS status
