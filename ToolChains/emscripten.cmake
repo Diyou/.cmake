@@ -12,7 +12,10 @@ else()
     set(emsdk_env "source ./emsdk_env.sh")
 endif()
 
-set(EMSDK "${CMAKE_CURRENT_SOURCE_DIR}/$ENV{EMSDK}")
+set(EMSDK "${PROJECT_ROOT}/$ENV{EMSDK}")
+if(CMAKE_IN_TRY_COMPILE)
+    set(DOTCMAKE_EMSDK_AUTOUPDATE OFF)
+endif()
 
 function(UpdateEMSDK)
     execute_process(COMMAND ${GIT_EXECUTABLE} pull
@@ -59,6 +62,11 @@ else()
 endif()
 
 include("${EMSCRIPTEN_ROOT}/cmake/Modules/Platform/Emscripten.cmake")
+#[[include("${EMSCRIPTEN_ROOT}/cmake/Modules/Compiler/Clang-CXX-CXXImportStd.cmake")
+set(CMAKE_CXX_STANDARD_LIBRARY libc++)
+_cmake_cxx_import_std(23 eval_import_std)
+cmake_language(EVAL CODE "${eval_import_std}")
+]]
 
 # ports
 set(SDL2_DIR "${EMSCRIPTEN_ROOT}/tools/ports/sdl2")
