@@ -75,6 +75,10 @@
             "patch": {
               "type": "string",
               "description": "CMake patch file to execute after setup/update"
+            },
+            "emscripten-port": {
+              "type": "string",
+              "description": "Preferred emscripten port"
             }
           },
           "default": {

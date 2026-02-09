@@ -13,9 +13,6 @@ else()
 endif()
 
 set(EMSDK "${PROJECT_ROOT}/$ENV{EMSDK}")
-if(CMAKE_IN_TRY_COMPILE)
-    set(DOTCMAKE_EMSDK_AUTOUPDATE OFF)
-endif()
 
 function(UpdateEMSDK)
     execute_process(COMMAND ${GIT_EXECUTABLE} pull
@@ -53,13 +50,43 @@ else()
             UpdateEmscripten()
         endif()
     else()
-        if(DOTCMAKE_EMSDK_AUTOUPDATE)
+        if(DOTCMAKE_EMSDK_AUTOUPDATE
+        AND NOT CMAKE_IN_TRY_COMPILE)
             UpdateEMSDK()
             UpdateEmscripten()
         endif()
     endif()
     set(EMSCRIPTEN_ROOT "${EMSDK}/upstream/emscripten")
 endif()
+
+function(PrepareEmscriptenPort port)
+    execute_process(COMMAND ${./}emcc
+        --show-ports
+        WORKING_DIRECTORY "${EMSCRIPTEN_ROOT}"
+        OUTPUT_VARIABLE ports
+    )
+    set(prefix --use-port=)
+    string(REGEX MATCHALL "${prefix}([^;)]+)[;)]" ports "${ports}")
+
+
+    if(NOT ${prefix}${${port}} IN_LIST ports)
+        message(FATAL_ERROR "Emscripten port ${${port}} not found")
+        return()
+    endif()
+
+    execute_process(COMMAND ${./}embuilder
+        build ${${port}}
+        WORKING_DIRECTORY "${EMSCRIPTEN_ROOT}"
+        OUTPUT_VARIABLE ports
+        RESULT_VARIABLE result
+    )
+    if(NOT result EQUAL 0)
+        message(FATAL_ERROR "Failed building Emscripten port ${${port}}")
+        return()
+    endif()
+
+    message(STATUS "Add [compile+link] flags ${prefix}${${port}}")
+endfunction()
 
 include("${EMSCRIPTEN_ROOT}/cmake/Modules/Platform/Emscripten.cmake")
 #[[include("${EMSCRIPTEN_ROOT}/cmake/Modules/Compiler/Clang-CXX-CXXImportStd.cmake")
@@ -69,5 +96,5 @@ cmake_language(EVAL CODE "${eval_import_std}")
 ]]
 
 # ports
-set(SDL2_DIR "${EMSCRIPTEN_ROOT}/tools/ports/sdl2")
-set(SDL3_DIR "${EMSCRIPTEN_ROOT}/tools/ports/sdl3")
+#set(SDL2_DIR "${EMSCRIPTEN_ROOT}/tools/ports/sdl2")
+#set(SDL3_DIR "${EMSCRIPTEN_ROOT}/tools/ports/sdl3")

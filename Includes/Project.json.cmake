@@ -211,7 +211,7 @@ function(_LOAD_PROJECT_JSON_DEPENDENCIES)
                 include("${PROJECT_ROOT}/${config}")
             endif()
             # Add subdirectory
-            if(EXISTS "${destination}/CMakeLists.txt")
+            if(add AND EXISTS "${destination}/CMakeLists.txt")
                 add_subdirectory("${destination}" EXCLUDE_FROM_ALL)
             endif()
         else()
@@ -224,17 +224,38 @@ function(_LOAD_PROJECT_JSON_DEPENDENCIES)
         GetJSONKeys(JSON dependencies)
         foreach(dependency ${dependencies})
             set(name ${dependency})
-            message("Load ${name}")
+            
             set(destination "${CACHE_DIR}/${name}")
             GetJSON(JSON ${dependency} dependency)
             # Required variables:
             set(success true)       # No errors
+            set(add true)           # Add subdirectory
             set(APPLY_PATCH false)  # Files changed and Patching required if there are any
 
             GetJSON(dependency type type)
             GetJSON(dependency patch patch)
             GetJSON(dependency config config)
 
+            # Skip sdl3 as its already prodived via prefab
+            if(ANDROID AND name STREQUAL sdl3)
+                message(STATUS "Use prefab: ${name}")
+                set(add false)
+                _Finalize()
+                continue()
+            endif()
+
+            if(EMSCRIPTEN)
+                GetJSON(dependency emscripten-port emport)
+                if(emport)
+                    message(STATUS "Use Port: ${name}")
+                    set(add false)
+                    PrepareEmscriptenPort(emport)
+                    _Finalize()
+                    continue()
+                endif()
+            endif()
+
+            message(STATUS "Add: ${name}")
             if(type STREQUAL "archive")
                 RequiredProperties(url sha256)
 
