@@ -1,92 +1,24 @@
 #!/bin/bash
 
-# Function to print and copy directory structure recursively
-copy_and_print_tree() {
-  local dir="$1"
-  local indent="$2"
-  local is_last="$3"
+# Get the directory of the script
+SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 
-  # List items in the directory, including hidden files due to dotglob
-  local items=("$dir"/*)
-  local item_count=${#items[@]}
+# Hardcoded CMake script relative to the script's directory
+CMAKE_SCRIPT="$SCRIPT_DIR/Setup.cmake"
 
-  for i in "${!items[@]}"; do
-    local item="${items[$i]}"
-    local base=$(basename "$item")
-    local is_dir=0
-    [ -d "$item" ] && is_dir=1 && base="$base/"
-
-    # Determine prefix for tree visualization
-    local prefix
-    if [ $i -eq $((item_count - 1)) ]; then
-      prefix="└──"
-    else
-      prefix="├──"
-    fi
-
-    # Print the item
-    echo -e "${indent}${prefix} $base"
-
-    # Calculate relative path
-    local rel_path="${item#$SUBDIR/}"
-
-    if [ $is_dir -eq 1 ]; then
-      # Create the directory in the target location if it doesn't exist
-      mkdir -p "./$rel_path" || { echo -e "${indent}    Error: Failed to create directory '$rel_path'"; copy_success=false; }
-      # Set indentation for children
-      local new_indent
-      if [ $i -eq $((item_count - 1)) ]; then
-        new_indent="${indent}    "  # Four spaces for last item's children
-      else
-        new_indent="${indent}│   "  # Vertical bar + three spaces for non-last
-      fi
-      # Recurse into the directory
-      copy_and_print_tree "$item" "$new_indent" $((i == item_count - 1))
-    else
-      # Copy the file to the target location
-      cp "$item" "./$rel_path" 2>/dev/null || { echo -e "${indent}    Error: Failed to copy '$base'"; copy_success=false; }
-    fi
-  done
-}
-
-# Main script starts here
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-PARENT_DIR="$SCRIPT_DIR/Templates"
-
-# Validate input
-if [ $# -ne 1 ]; then
-  echo "Error: Please provide a template name"
-  echo "Usage: $0 <template>"
-  echo "Available Templates:"
-  [ -d "$PARENT_DIR" ] && ls -d "$PARENT_DIR"/*/ 2>/dev/null | while read -r dir; do basename "$dir"; done || echo "  (No 'Templates' directory found)"
-  exit 1
+# Check if cmake is installed
+if ! command -v cmake &> /dev/null; then
+    echo "Error: cmake is not installed or not found in PATH"
+    exit 1
 fi
 
-SUBDIR="$PARENT_DIR/$1"
-
-if [ ! -d "$SUBDIR" ]; then
-  echo "Error: Template '$1' does not exist"
-  echo "Available Templates:"
-  [ -d "$PARENT_DIR" ] && ls -d "$PARENT_DIR"/*/ 2>/dev/null | while read -r dir; do basename "$dir"; done || echo "  (No 'Templates' directory found)"
-  exit 1
+# Check if the CMake script exists
+if [ ! -f "$CMAKE_SCRIPT" ]; then
+    echo "Error: CMake script '$CMAKE_SCRIPT' not found"
+    exit 1
 fi
 
-echo "Copying files to: $(pwd)"
+# Run CMake in script mode with the hardcoded script, passing cwd and all arguments
+cmake -P "$CMAKE_SCRIPT" -- "$(pwd)" "$@"
 
-# Enable dotglob for hidden files
-shopt -s dotglob
-
-copy_success=true
-
-# Start the recursive copy and print
-copy_and_print_tree "$SUBDIR" "  " 0
-
-shopt -u dotglob
-
-# Final status
-if [ "$copy_success" = true ] && [ -n "$(ls -A "$SUBDIR")" ]; then
-  echo "Successfully copied files from '$SUBDIR' to current directory"
-else
-  [ "$copy_success" = false ] && echo "Error: One or more files failed to copy" && exit 1
-  echo "No files found in '$SUBDIR' to copy"
-fi
+exit $?
