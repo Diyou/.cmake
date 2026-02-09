@@ -1,5 +1,6 @@
 include(${CMAKE_CURRENT_LIST_DIR}/clang.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/gradle/common.cmake)
+unset(CMAKE_PROJECT_INCLUDE)
 RunOnlyOnce()
 
 # gradle requires java

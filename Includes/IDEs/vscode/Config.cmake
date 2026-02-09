@@ -1,6 +1,6 @@
 list(JOIN DEBUG_ARGS [[", "]] DEBUG_ARGS)
 
-if(CMAKE_SYSTEM_NAME STREQUAL Android)
+if(ANDROID)
     set(profile Android)
 elseif(EMSCRIPTEN)
     set(profile Emscripten)
@@ -25,7 +25,7 @@ endif()
 
 # Configure clangd
 if(CMAKE_EXPORT_COMPILE_COMMANDS)
-    get_filename_component(COMPILER_PATH ${CMAKE_CXX_COMPILER} DIRECTORY)
+    get_filename_component(COMPILER_PATH "${CMAKE_CXX_COMPILER}" DIRECTORY)
     if(EXISTS ${COMPILER_PATH}/clangd)
         AddQuotes(CLANGD ${COMPILER_PATH}/clangd)
     endif()

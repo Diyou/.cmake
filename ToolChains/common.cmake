@@ -36,7 +36,7 @@ if(NOT ${CMAKE_IN_TRY_COMPILE})
         "Finalize"
     )
     # Project.json.cmake needs to be included after the project() call
-    set(CMAKE_PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/../Includes/Project.json.cmake")
+    list(APPEND CMAKE_PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/../Includes/Project.json.cmake")
 endif()
 
 IncludeQueued()
