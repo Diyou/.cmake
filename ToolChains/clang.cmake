@@ -1,4 +1,4 @@
-include(${CMAKE_CURRENT_LIST_DIR}/default.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/common.cmake)
 
 set(ENV{CC} clang)
 set(ENV{CXX} clang++)

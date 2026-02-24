@@ -1,6 +1,5 @@
 include(${CMAKE_CURRENT_LIST_DIR}/clang.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/gradle/common.cmake)
-unset(CMAKE_PROJECT_INCLUDE)
 RunOnlyOnce()
 
 # gradle requires java
@@ -83,6 +82,12 @@ load_cache(
         CMAKE_TOOLCHAIN_FILE
         CMAKE_PROJECT_TOP_LEVEL_INCLUDES
 )
+
+if(INTERNAL_CACHE)
+    set_property(DIRECTORY PROPERTY ADDITIONAL_CLEAN_FILES
+        "${INTERNAL_CACHE}"
+    )
+endif()
 
 add_custom_target(assemble COMMAND
     ${./}gradlew

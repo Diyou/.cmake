@@ -1,5 +1,13 @@
 include_guard(GLOBAL)
 
+# Global settings
+set(CMAKE_CXX_STANDARD 26)
+
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+set(CMAKE_CXX_SCAN_FOR_MODULES ON)
+
+#Setup .cmake functions
 if(PROJECT_IS_TOP_LEVEL)
 
 # Requirement
@@ -42,6 +50,21 @@ endif()
 IncludeQueued()
 
 endif(PROJECT_IS_TOP_LEVEL)
+
+# Setup experimental import std;
+if(NOT CMAKE_IN_TRY_COMPILE)
+    set(CMAKE_CXX_MODULE_STD ON)
+
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL 4)
+        if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.0.3)
+            set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD d0edc3af-4c50-42ea-a356-e2862fe7a444)
+        else()
+            set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD a9e1cf81-9932-4810-974b-6eccaf14e457)
+        endif()
+    elseif(CMAKE_VERSION VERSION_LESS 4)
+            set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD 0e5b6991-d74f-4b3d-a41c-cf096e0b2508)
+    endif()
+endif()
 
 # Prevent Warning: Manually-specified variables were not used by the project:
 if(CMAKE_TOOLCHAIN_FILE)
