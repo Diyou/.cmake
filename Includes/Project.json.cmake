@@ -241,6 +241,7 @@ function(_LOAD_PROJECT_JSON_DEPENDENCIES)
                 message(STATUS "Use prefab: ${name}")
                 set(add false)
                 _Finalize()
+                find_package(SDL3 REQUIRED CONFIG)
                 continue()
             endif()
 
