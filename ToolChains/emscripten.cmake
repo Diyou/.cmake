@@ -85,7 +85,13 @@ function(PrepareEmscriptenPort port)
         return()
     endif()
 
-    message(STATUS "Add [compile+link] flags ${prefix}${${port}}")
+    if( ${port} STREQUAL sdl2 OR
+        ${port} STREQUAL sdl3
+    )
+        find_package(${${port}} REQUIRED CONFIG)
+    else()
+        message(STATUS "Add [compile+link] flags ${prefix}${${port}}")
+    endif()
 endfunction()
 
 include("${EMSCRIPTEN_ROOT}/cmake/Modules/Platform/Emscripten.cmake")
