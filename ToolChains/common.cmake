@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 
 # Global settings
-set(CMAKE_CXX_STANDARD 26)
+set(CMAKE_CXX_STANDARD 23)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
