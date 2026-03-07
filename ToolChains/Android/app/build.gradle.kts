@@ -93,5 +93,5 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.kotlinx.serialization.json)
 
-    implementation(files("libs/SDL3/SDL3-3.2.14.aar"))
+    implementation(files("libs/SDL3/SDL3-3.4.2.aar"))
 }
