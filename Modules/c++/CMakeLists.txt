@@ -2,11 +2,11 @@ STATIC(.cmake PUBLIC
     FILE_SET module_files
     TYPE CXX_MODULES
     FILES
-        Utils/Utils.c++
-        Utils/Compiler.c++
-        Utils/Formatters.c++
-        Utils/GetFunctionName.c++
-        Utils/Platform.c++
+        Utils/Compiler.cxx
+        Utils/Formatters.cxx
+        Utils/GetFunctionName.cxx
+        Utils/Platform.cxx
+        Utils/Utils.ixx
 )
 
 if( CMAKE_CXX_MODULE_STD)
