@@ -1,3 +1,28 @@
+if(WIN32)
+    find_program(VSCODE Code.exe)
+else()
+    find_program(VSCODE code)
+endif()
+
+execute_process(COMMAND
+    "${VSCODE}" --list-extensions --show-versions
+    OUTPUT_VARIABLE VSCODE_EXTENSIONS
+    RESULT_VARIABLE _RESULT
+    ERROR_QUIET
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+if(_RESULT EQUAL 0)
+    string(REPLACE "\n" ";" VSCODE_EXTENSIONS "${VSCODE_EXTENSIONS}")
+    # Check if clangd extension is available
+    foreach(extension IN LISTS VSCODE_EXTENSIONS)
+        if(extension MATCHES [[(.+)\.vscode-clangd@([^ ]+)]])
+            set(VSCODE_CLANGD "${CMAKE_MATCH_2}")
+            break()
+        endif()
+    endforeach()
+endif()
+
 list(JOIN DEBUG_ARGS [[", "]] DEBUG_ARGS)
 
 if(ANDROID)
@@ -24,7 +49,8 @@ if(EXISTS ${.vscode}/tasks.json)
 endif()
 
 # Configure clangd
-if(CMAKE_EXPORT_COMPILE_COMMANDS)
+if( CMAKE_EXPORT_COMPILE_COMMANDS
+AND VSCODE_CLANGD)
     get_filename_component(COMPILER_PATH "${CMAKE_CXX_COMPILER}" DIRECTORY)
     if(EXISTS ${COMPILER_PATH}/clangd)
         AddQuotes(CLANGD ${COMPILER_PATH}/clangd)
