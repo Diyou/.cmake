@@ -60,14 +60,28 @@
                 },
                 "shallow": {
                   "type": "boolean",
-                  "default": true,
+                  "default": false,
                   "description": "Shallow clone"
+                },
+                "submodules": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems" : 1,
+                  "uniqueItems": true,
+                  "description": "Git submodules to checkout after clone"
                 }
               },
               "required": ["type", "url", "tag"]
             }
           ],
           "properties": {
+            "description": {
+              "type": "string",
+              "description": "Short description of the dependency"
+            },
             "config": {
               "type": "string",
               "description": "CMake configuration file to include before add_subdirectory"

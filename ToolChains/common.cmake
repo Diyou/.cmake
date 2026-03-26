@@ -48,7 +48,9 @@ if(NOT ${CMAKE_IN_TRY_COMPILE})
         "Finalize"
     )
     # Project.json.cmake needs to be included after the project() call
-    list(APPEND CMAKE_PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/../Includes/Project.json.cmake")
+    list(APPEND CMAKE_PROJECT_INCLUDE
+        "${CMAKE_CURRENT_LIST_DIR}/../Project.json/Project.cmake"
+    )
 endif()
 
 IncludeQueued()
@@ -59,7 +61,15 @@ endif(PROJECT_IS_TOP_LEVEL)
 if(NOT CMAKE_IN_TRY_COMPILE)
     set(CMAKE_CXX_MODULE_STD ON)
 
-    set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD d0edc3af-4c50-42ea-a356-e2862fe7a444)
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.3.0)
+        set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD
+            451f2fe2-a8a2-47c3-bc32-94786d8fc91b
+        )
+    else()
+        set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD
+            d0edc3af-4c50-42ea-a356-e2862fe7a444
+        )
+    endif()
 endif()
 
 # Prevent Warning: Manually-specified variables were not used by the project:

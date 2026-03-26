@@ -150,11 +150,11 @@ endfunction()
 
 function(GetJSONArray json value)
   unset(array)
-  string(JSON elements LENGTH "${json}")
+  string(JSON elements LENGTH "${${json}}")
   if(elements GREATER 0)
     math(EXPR LAST_INDEX "${elements} - 1")
     foreach(INDEX RANGE 0 ${LAST_INDEX})
-      string(JSON element GET "${json}" ${INDEX})
+      string(JSON element GET "${${json}}" ${INDEX})
       list(APPEND array "${element}")
     endforeach()
   endif()
@@ -241,6 +241,19 @@ endfunction()
 
 function(GitTag dir outVar)
   execute_process(COMMAND ${GIT_EXECUTABLE}
+          symbolic-ref --short -q HEAD
+          WORKING_DIRECTORY "${dir}"
+          OUTPUT_VARIABLE out
+          RESULT_VARIABLE result
+          ERROR_QUIET
+          OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+  if(result EQUAL 0)
+    set(${outVar} ${out} PARENT_SCOPE)
+    return()
+  endif()
+
+  execute_process(COMMAND ${GIT_EXECUTABLE}
           describe --tags --exact-match
           WORKING_DIRECTORY "${dir}"
           OUTPUT_VARIABLE out
@@ -252,6 +265,7 @@ function(GitTag dir outVar)
     set(${outVar} ${out} PARENT_SCOPE)
     return()
   endif()
+
   execute_process(COMMAND ${GIT_EXECUTABLE}
           rev-parse HEAD
           WORKING_DIRECTORY "${dir}"
