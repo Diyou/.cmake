@@ -15,7 +15,9 @@
             },
             "args": [
                 "--hostname=localhost",
-                "--no_browser",
+                "--no-browser",
+                "--serve-after-close",
+                "--serve-after-exit",
                 "${command:cmake.getLaunchTargetDirectory}"
             ],
             "cwd": "@EMSCRIPTEN_ROOT@",
