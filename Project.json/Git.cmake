@@ -157,7 +157,7 @@ endmacro()
 macro(Checkout)
     message("Checking\t'${DEPENDENCY}' out at '${tag}'")
     execute_process(COMMAND "${GIT_EXECUTABLE}"
-        checkout --recurse-submodules ${tag}
+        checkout --force --recurse-submodules ${tag}
         WORKING_DIRECTORY "${DEPENDENCY_DIR}"
         OUTPUT_QUIET
         RESULT_VARIABLE res
