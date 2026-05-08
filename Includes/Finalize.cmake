@@ -17,6 +17,40 @@ function(_DOTCMAKE_FINALIZE)
     endif()
     # clangd support
     if(CMAKE_EXPORT_COMPILE_COMMANDS)
+        # TODO GCC Fixup might be/become superfluous
+        macro(GCC_Headers output)
+            execute_process(COMMAND
+                "${CMAKE_CXX_COMPILER}" -v -c -xc++ /dev/null
+                ERROR_VARIABLE _OUTPUT
+                RESULT_VARIABLE _RESULT
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+            )
+
+            if(_RESULT EQUAL 0)
+                string(REGEX MATCH
+                    "#include <...> search starts here:(.*)End of search list\."
+                    _OUTPUT "${_OUTPUT}"
+                )
+                string(REGEX MATCHALL
+                    "[^\n]+"
+                    GCC_INCLUDES "${CMAKE_MATCH_1}"
+                )
+                set(${output} ${GCC_INCLUDES})
+            endif() 
+        endmacro()
+
+        if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
+            set(CLANGD_GCC_HEADERS "  Add:\n")
+            set(CLANGD_GCC_HEADERS_PREFIX "    - -I")
+            GCC_Headers(headers)
+            foreach(header IN LISTS headers)
+                string(STRIP "${header}" header)
+                set(CLANGD_GCC_HEADERS
+                    "${CLANGD_GCC_HEADERS}${CLANGD_GCC_HEADERS_PREFIX}${header}\n"
+                )
+            endforeach()
+        endif()
+
         Configure(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/.clangd ${CMAKE_SOURCE_DIR}/.clangd)
      endif()
 endfunction()

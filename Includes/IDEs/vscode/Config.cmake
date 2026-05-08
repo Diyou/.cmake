@@ -1,7 +1,7 @@
 if(WIN32)
-    find_program(VSCODE Code.exe)
+    find_program(VSCODE Code.exe REQUIRED)
 else()
-    find_program(VSCODE code)
+    find_program(VSCODE code REQUIRED)
 endif()
 
 execute_process(COMMAND
@@ -23,6 +23,7 @@ if(_RESULT EQUAL 0)
     endforeach()
 endif()
 
+# Debugging
 list(JOIN DEBUG_ARGS [[", "]] DEBUG_ARGS)
 
 if(ANDROID)
@@ -35,12 +36,14 @@ else()
     set(profile ${CMAKE_CXX_COMPILER_ID})
 endif()
 
+# Launch configs
 set(.vscode "${CMAKE_CURRENT_LIST_DIR}/${profile}/.vscode")
 Configure(
     ${.vscode}/launch.json
     ${CMAKE_SOURCE_DIR}/.vscode/launch.json
 )
 
+# Tasks
 if(EXISTS ${.vscode}/tasks.json)
     Configure(
         ${.vscode}/tasks.json
@@ -48,16 +51,75 @@ if(EXISTS ${.vscode}/tasks.json)
     )
 endif()
 
-# Configure clangd
-if( CMAKE_EXPORT_COMPILE_COMMANDS
-AND VSCODE_CLANGD)
-    get_filename_component(COMPILER_PATH "${CMAKE_CXX_COMPILER}" DIRECTORY)
-    if(EXISTS ${COMPILER_PATH}/clangd)
-        AddQuotes(CLANGD ${COMPILER_PATH}/clangd)
+# settings.json
+set(settings.json "${PROJECT_ROOT}/.vscode/settings.json")
+if(NOT EXISTS "${settings.json}")
+    set(JSON {})
+else()
+    file(READ "${settings.json}" JSON)
+endif()
+ValidJSON(JSON valid)
+
+if(valid)
+    # CMake Settings
+    set(UseCMAKEPresets always)
+    AddQuotes(UseCMAKEPresets)
+    SetJSON(JSON cmake.useCMakePresets ${UseCMAKEPresets})
+
+    # Cpp settings
+    SetJSON(JSON C_Cpp.autoAddFileAssociations false)
+
+    # Clangd settings
+    if(VSCODE_CLANGD)
+        set(IntelliSenseEngine disabled)
+        AddQuotes(IntelliSenseEngine)
+
+        SetJSON(JSON clangd.arguments
+            [[ [
+            "--header-insertion=never",
+            "--clang-tidy"
+            ] ]]
+        )
+        
+        unset(clangd)
+        if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+            execute_process(COMMAND
+                "${CMAKE_CXX_COMPILER}"
+                --print-prog-name=clangd
+                OUTPUT_VARIABLE out
+                ERROR_QUIET
+                RESULT_VARIABLE res
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+            )
+            if(res EQUAL 0)
+                set(clangd "${out}")
+            endif()
+        else()
+            find_program(clangd clangd)
+        endif()
+    else()
+        set(IntelliSenseEngine default)
+        AddQuotes(IntelliSenseEngine)
+
+        SetJSON(JSON clangd.arguments "")
     endif()
-    UpdateJSONFile(
-        ${CMAKE_SOURCE_DIR}/.vscode/settings.json
-        clangd.path
-        "${CLANGD}"
-    )
+    SetJSON(JSON C_Cpp.intelliSenseEngine "${IntelliSenseEngine}")
+    if(clangd)
+        AddQuotes(clangd)
+        SetJSON(JSON clangd.path "${clangd}")
+    else()
+        SetJSON(JSON clangd.path "")
+    endif()
+
+    # Convenience settings
+    SetJSON(JSON files.insertFinalNewline true)
+    SetJSON(JSON files.trimFinalNewlines true)
+    SetJSON(JSON output.smartScroll.enabled false)
+endif()
+
+ValidJSON(JSON valid)
+if(valid)
+    WriteIfChanged("${settings.json}" "${JSON}")
+else()
+    message(WARNING "Invalid json for settings.json:\n${JSON}")
 endif()

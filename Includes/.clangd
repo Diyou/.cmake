@@ -4,7 +4,8 @@ CompileFlags:
   CompilationDatabase: '@CMAKE_BINARY_DIR@'
   Remove: [
     -sUSE*
-  ] 
+  ]
+@CLANGD_GCC_HEADERS@ 
 
 Hover:
   ShowAKA: Yes

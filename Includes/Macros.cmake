@@ -166,11 +166,6 @@ function(SetJSON json key value)
     return()
   endif()
 
-  string(JSON elements LENGTH "${${json}}")
-  if(NOT elements OR elements EQUAL 0)
-    return()
-  endif()
-
   if("${value}" STREQUAL "")
     string( JSON ${json}
             REMOVE "${${json}}"

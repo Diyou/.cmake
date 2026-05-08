@@ -45,7 +45,7 @@ function(ParseGITDependency)
     endif()
 
     GitTag("${DEPENDENCY_DIR}" old_tag)
-    if(NOT tag MATCHES "${old_tag}")
+    if(NOT old_tag MATCHES "${tag}$")
         Checkout()
     endif()
     
@@ -83,7 +83,7 @@ macro(ParseGITModules)
                         RESULT_VARIABLE res
                         ERROR_VARIABLE err
                     )
-                    if(error)
+                    if(NOT res EQUAL 0)
                         message(WARNING "${err}")
                     endif()
                 endif()
@@ -149,25 +149,47 @@ macro(Clone)
         RESULT_VARIABLE res
         ERROR_VARIABLE err
     )
-    if(error)
+    if(NOT res EQUAL 0)
         message(WARNING "${err}")
     endif()
 endmacro()
 
 macro(Checkout)
     message("Checking\t'${DEPENDENCY}' out at '${tag}'")
-    execute_process(COMMAND "${GIT_EXECUTABLE}"
-        checkout --force --recurse-submodules ${tag}
+    execute_process(COMMAND
+        "${GIT_EXECUTABLE}" fetch origin ${tag}:refs/tags/${tag} --depth=1
         WORKING_DIRECTORY "${DEPENDENCY_DIR}"
         OUTPUT_QUIET
         RESULT_VARIABLE res
         ERROR_VARIABLE err
     )
-    if(error)
+    if(NOT res EQUAL 0)
         message(WARNING "${err}")
     else()
-        PREPARE_PATCH()
-    endif()
+        execute_process(COMMAND
+            "${GIT_EXECUTABLE}" checkout --force -B ${tag} origin/${tag}
+            WORKING_DIRECTORY "${DEPENDENCY_DIR}"
+            OUTPUT_QUIET
+            RESULT_VARIABLE res
+            ERROR_VARIABLE err
+        )
+        if(NOT res EQUAL 0)
+            message(WARNING "${err}")
+        else()
+            execute_process(COMMAND
+                "${GIT_EXECUTABLE}" submodule update --force --recursive
+                WORKING_DIRECTORY "${DEPENDENCY_DIR}"
+                OUTPUT_QUIET
+                RESULT_VARIABLE res
+                ERROR_VARIABLE err
+            )
+            if(NOT res EQUAL 0)
+                message(WARNING "${err}")
+            else()
+                PREPARE_PATCH()
+            endif()
+        endif()
+    endif()    
 endmacro()
 
 ### Shallow
