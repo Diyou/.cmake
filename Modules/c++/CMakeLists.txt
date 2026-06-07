@@ -9,7 +9,7 @@ STATIC(.cmake PUBLIC
         Utils/Utils.ixx
 )
 
-if( CMAKE_CXX_MODULE_STD)
+if(CMAKE_CXX_MODULE_STD)
     target_compile_definitions(.cmake PUBLIC CMAKE_IMPORT_STD=1)
 endif()
 

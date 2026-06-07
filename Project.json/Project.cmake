@@ -56,7 +56,13 @@ endif()
 # Dependencies
 function(_LOAD_PROJECT_JSON_DEPENDENCIES)
     GetJSON(JSON Depends JSON_deps)
+    if(NOT JSON_deps)
+        return()
+    endif()
     GetJSONKeys(JSON_deps dependencies)
+    if(NOT dependencies)
+        return()
+    endif()
 
     # Shared helpers
     macro(FAIL)
