@@ -1,7 +1,4 @@
 include(${CMAKE_CURRENT_LIST_DIR}/clang.cmake)
-# TODO disable until functional
-unset(CMAKE_CXX_MODULE_STD)
-unset(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD)
 RunOnlyOnce()
 
 if(WIN32)
@@ -14,13 +11,13 @@ endif()
 
 set(EMSDK "${PROJECT_ROOT}/$ENV{EMSDK}")
 
-function(UpdateEMSDK)
+macro(UpdateEMSDK)
     execute_process(COMMAND ${GIT_EXECUTABLE} pull
         WORKING_DIRECTORY "${EMSDK}"
         OUTPUT_VARIABLE output
     )
-endfunction()
-function(UpdateEmscripten)
+endmacro()
+macro(UpdateEmscripten)
     execute_process(COMMAND ${./}${emsdk}
         install latest
         WORKING_DIRECTORY "${EMSDK}"
@@ -30,7 +27,7 @@ function(UpdateEmscripten)
         WORKING_DIRECTORY "${EMSDK}"
         OUTPUT_VARIABLE output
     )
-endfunction()
+endmacro()
 
 function(DownloadEMSDK destination)
     execute_process(COMMAND ${GIT_EXECUTABLE}
@@ -95,12 +92,7 @@ function(PrepareEmscriptenPort port)
 endfunction()
 
 include("${EMSCRIPTEN_ROOT}/cmake/Modules/Platform/Emscripten.cmake")
-#[[include("${EMSCRIPTEN_ROOT}/cmake/Modules/Compiler/Clang-CXX-CXXImportStd.cmake")
-set(CMAKE_CXX_STANDARD_LIBRARY libc++)
-_cmake_cxx_import_std(23 eval_import_std)
-cmake_language(EVAL CODE "${eval_import_std}")
-]]
-
-# ports
-#set(SDL2_DIR "${EMSCRIPTEN_ROOT}/tools/ports/sdl2")
-#set(SDL3_DIR "${EMSCRIPTEN_ROOT}/tools/ports/sdl3")
+if(EMSCRIPTEN_VERSION VERSION_LESS 6.0.1)
+    unset(CMAKE_CXX_MODULE_STD)
+    unset(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD)
+endif()

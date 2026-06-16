@@ -1,6 +1,35 @@
+include_guard(GLOBAL)
 include(${CMAKE_CURRENT_LIST_DIR}/clang.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/gradle/common.cmake)
-RunOnlyOnce()
+
+set(ANDROID_STL c++_shared)
+
+if(CMAKE_IN_TRY_COMPILE)
+    return()
+endif()
+
+macro(_COMMON_CONFIG)
+    if(CMAKE_CXX_MODULE_STD)
+        # needed for import std
+        string(APPEND CMAKE_CXX_FLAGS " -D__BIONIC_CTYPE_INLINE=inline")
+        string(REGEX REPLACE [[-D_FORTIFY_SOURCE(=[^ ]+)?]] "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+
+        set_property(SOURCE
+            "${ANDROID_TOOLCHAIN_ROOT}/share/libc++/v1/std.cppm"
+            "${ANDROID_TOOLCHAIN_ROOT}/share/libc++/v1/std.compat.cppm"
+        PROPERTY
+            COMPILE_FLAGS -Wno-reserved-module-identifier
+        )
+    endif()
+endmacro()
+cmake_language(DEFER CALL _COMMON_CONFIG)
+
+if(ANDROID)
+    # Make the gradle files discoverable by the toplevel cmake project
+    file(CREATE_LINK "${CMAKE_BINARY_DIR}"
+        ${CMAKE_SOURCE_DIR}/build/${CMAKE_BUILD_TYPE}-android/${ANDROID_ABI}
+    SYMBOLIC)
+    return()
+endif()
 
 # gradle requires java
 if(DEFINED ENV{JAVA_HOME})
@@ -16,6 +45,7 @@ endif()
 # gradle requires ANDROID_HOME
 if(DEFINED ENV{ANDROID_HOME})
     get_filename_component(ANDROID_HOME "$ENV{ANDROID_HOME}" ABSOLUTE)
+    set(ENV{ANDROID_HOME} "${ANDROID_HOME}")
 else()
     message(FATAL_ERROR "JAVA_HOME not set")
 endif()
@@ -41,54 +71,35 @@ set(GRADLE_buildCMake buildCMake${CMAKE_BUILD_TYPE})
 set(GRADLE_assemble assemble${CMAKE_BUILD_TYPE})
 set(GRADLE_bundle bundle${CMAKE_BUILD_TYPE})
 
-if(NOT INTERNAL_CACHE_LINK_PREFIX)
-    set(INTERNAL_CACHE_LINK_PREFIX "${CMAKE_BINARY_DIR}")
-endif()
-
-list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
-    ANDROID_ABI
-    INTERNAL_CACHE_LINK_PREFIX
-)
-
-set(INTERNAL_CACHE_LINK "${INTERNAL_CACHE_LINK_PREFIX}-${ANDROID_ABI}")
+set(INTERNAL_CACHE_LINK "${CMAKE_BINARY_DIR}/${ANDROID_ABI}")
 get_filename_component(INTERNAL_CACHE "${INTERNAL_CACHE_LINK}" REALPATH)
 
-# sync with gradle
-if(NOT EXISTS ${INTERNAL_CACHE_LINK})
-    # trigger reconfiguration
-    file(GLOB caches ${CMAKE_CURRENT_LIST_DIR}/Android/app/.cxx/${CMAKE_BUILD_TYPE}/*/${ANDROID_ABI})
-    foreach(cache ${caches})
-        file(REMOVE_RECURSE "${cache}")
-    endforeach()
+execute_process(COMMAND
+    ${./}gradlew
+        ${GRADLE_configureCMake}
+    -Pandroid.injected.build.abi=${ANDROID_ABI}
+    --stacktrace
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/Android
+    RESULT_VARIABLE result
+)
 
-    execute_process(COMMAND
-        ${./}gradlew
-            ${GRADLE_configureCMake}
-        -Pandroid.injected.build.abi=${ANDROID_ABI}
-        --stacktrace
-        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/Android
-        RESULT_VARIABLE result
-    )
-
-    if(${result})
-        message(FATAL_ERROR "gradlew returned ${result}")
-    endif()
+if(${result})
+    message(FATAL_ERROR "gradlew returned ${result}")
 endif()
 
 # load internal gradle cache
-load_cache(
-    "${INTERNAL_CACHE}"
-    EXCLUDE
-        CMAKE_TOOLCHAIN_FILE
-        CMAKE_PROJECT_TOP_LEVEL_INCLUDES
-)
-
-if(INTERNAL_CACHE)
-    set_property(DIRECTORY PROPERTY ADDITIONAL_CLEAN_FILES
-        "${INTERNAL_CACHE}"
-    )
+if(NOT EXISTS "${INTERNAL_CACHE}")
+    message(FATAL_ERROR "Failed to load")
 endif()
 
+load_cache("${INTERNAL_CACHE}")
+include("${CMAKE_TOOLCHAIN_FILE}")
+
+set_property(DIRECTORY PROPERTY ADDITIONAL_CLEAN_FILES
+    "${INTERNAL_CACHE}"
+)
+
+# Utility targets
 add_custom_target(assemble COMMAND
     ${./}gradlew
         ${GRADLE_assemble}

@@ -1,51 +1,58 @@
+import groovy.json.JsonSlurper
+
 import java.util.Locale
 import java.util.Calendar
 import java.util.TimeZone
 
-import dev.dotcmake.Config
-import dev.dotcmake.CMake
-
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
     namespace = "com.diyou.dotcmake"
-    compileSdk = 36
+    compileSdk {
+        version = release(37) {
+            minorApiLevel = 0
+        }
+    }
     ndkVersion = "29.0.14206865"
 
     val sourceRoot: File = rootProject.file("../../..")
+    val projectJson = (JsonSlurper().parse(
+        file(File(sourceRoot, "Project.json"))
+    ) as Map<*, *>)["Project"] as Map<*, *>
+
+    val projectName = projectJson["Name"] as String
+    val projectID = projectJson["ID"] as String
+    val projectVersion = projectJson["Version"] as String
+    val projectDescription = projectJson["Description"] as? String
+    val projectURL = projectJson["URL"] as? String
+
+    val timezone = TimeZone.getTimeZone("UTC")
+    val calendar = Calendar.getInstance(timezone, Locale.ROOT)
+
+    val year    = calendar.get(Calendar.YEAR) - 2000
+    val day     = calendar.get(Calendar.DAY_OF_YEAR)
+    val minute  = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE)
 
     defaultConfig {
-        minSdk = 26
-        targetSdk = 36
+        manifestPlaceholders["appName"] = projectName
+        applicationId = projectID
+        minSdk = 24
+        targetSdk = 37
+        versionCode = (year * 1_000_000) + (day * 10_000) + minute
+        versionName = projectVersion
+        description = projectDescription
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        val timezone = TimeZone.getTimeZone("UTC")
-        val calendar = Calendar.getInstance(timezone, Locale.ROOT)
-
-        val year    = calendar.get(Calendar.YEAR) - 2000
-        val day     = calendar.get(Calendar.DAY_OF_YEAR)
-        val minute  = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE)
-
-        versionCode = (year * 1_000_000) + (day * 10_000) + minute
-
-        val configFile = File(sourceRoot, "Project.json")
-
-        val config: Config = CMake.readConfig(configFile)
-        applicationId = config.Project.ID
-        versionName = config.Project.Version
-        resValue("string", "app_name", config.Project.Name)
-
         externalNativeBuild {
             cmake {
-                arguments += "-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=${File(sourceRoot,".cmake/ToolChains/gradle/callback.cmake").absolutePath}"
+                arguments(
+                    "-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=${File(sourceRoot, ".cmake/ToolChains/android.cmake")}"
+                )
             }
         }
-
         // Remove for 32bit support
         ndk {
             abiFilters.clear()
@@ -55,25 +62,20 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            optimization {
+                enable = false
+            }
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
     externalNativeBuild {
         cmake {
             path = File(sourceRoot, "CMakeLists.txt")
-            version = "4.0.2"
+            buildStagingDirectory = File(sourceRoot, "build/.Android")
+            version = "4.1.2"
         }
     }
     buildFeatures {
@@ -83,15 +85,13 @@ android {
 }
 
 dependencies {
-
-    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.material)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.kotlinx.serialization.json)
+    androidTestImplementation(libs.androidx.junit)
 
-    implementation(files("libs/SDL3/SDL3-3.4.2.aar"))
+    implementation(files("libs/SDL3/SDL3-3.4.10.aar"))
 }
