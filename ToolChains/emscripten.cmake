@@ -11,22 +11,34 @@ endif()
 
 set(EMSDK "${PROJECT_ROOT}/$ENV{EMSDK}")
 
+function(GetPorts)
+    execute_process(COMMAND ${./}emcc --show-ports
+        WORKING_DIRECTORY "${EMSCRIPTEN_ROOT}"
+        OUTPUT_VARIABLE PORTS
+    )
+    set(_REGEX [[--use-port=([^ ;)]+)]])
+    string(REGEX MATCHALL ${_REGEX} PORTS "${PORTS}")
+    list(TRANSFORM PORTS REPLACE ${_REGEX} \\1)
+    set(EMSCRIPTEN_PORTS ${PORTS} CACHE INTERNAL "Emscripten ports" FORCE)
+endfunction()
+
 macro(UpdateEMSDK)
     execute_process(COMMAND ${GIT_EXECUTABLE} pull
         WORKING_DIRECTORY "${EMSDK}"
-        OUTPUT_VARIABLE output
+        OUTPUT_QUIET
     )
 endmacro()
 macro(UpdateEmscripten)
-    execute_process(COMMAND ${./}${emsdk}
-        install latest
+    execute_process(COMMAND ${./}${emsdk} install latest
         WORKING_DIRECTORY "${EMSDK}"
+        OUTPUT_QUIET
     )
-    execute_process(COMMAND ${./}${emsdk}
-        activate latest
+    execute_process(COMMAND ${./}${emsdk} activate latest
+        ERROR_QUIET
         WORKING_DIRECTORY "${EMSDK}"
-        OUTPUT_VARIABLE output
+        OUTPUT_QUIET
     )
+    GetPorts()
 endmacro()
 
 function(DownloadEMSDK destination)
@@ -38,6 +50,7 @@ endfunction()
 if(DEFINED ENV{EMSCRIPTEN_ROOT})
     set(EMSCRIPTEN_ROOT "$ENV{EMSCRIPTEN_ROOT}")
 else()
+    set(EMSCRIPTEN_ROOT "${EMSDK}/upstream/emscripten")
     if(NOT EXISTS ${EMSDK} OR NOT EXISTS ${EMSDK}/${emsdk})
         file(GLOB not_empty "${EMSDK}/*")
         if(EXISTS ${EMSDK} AND not_empty)
@@ -53,43 +66,43 @@ else()
             UpdateEmscripten()
         endif()
     endif()
-    set(EMSCRIPTEN_ROOT "${EMSDK}/upstream/emscripten")
+endif()
+if(NOT DEFINED EMSCRIPTEN_PORTS)
+    GetPorts()
 endif()
 
-function(PrepareEmscriptenPort port)
-    execute_process(COMMAND ${./}emcc
-        --show-ports
-        WORKING_DIRECTORY "${EMSCRIPTEN_ROOT}"
-        OUTPUT_VARIABLE ports
-    )
-    set(prefix --use-port=)
-    string(REGEX MATCHALL "${prefix}([^;)]+)[;)]" ports "${ports}")
+function(UseEmscriptenPort name)
+    string(TOLOWER ${${name}} port)
 
+    # Aliases
+    if(port STREQUAL dawn)
+        set(port emdawnwebgpu)
+    endif()
 
-    if(NOT ${prefix}${${port}} IN_LIST ports)
-        message(FATAL_ERROR "Emscripten port ${${port}} not found")
+    if(NOT port IN_LIST EMSCRIPTEN_PORTS)
         return()
     endif()
 
-    execute_process(COMMAND ${./}embuilder
-        build ${${port}}
+    execute_process(COMMAND ${./}embuilder build ${port}
         WORKING_DIRECTORY "${EMSCRIPTEN_ROOT}"
-        OUTPUT_VARIABLE ports
+        ERROR_QUIET
         RESULT_VARIABLE result
     )
     if(NOT result EQUAL 0)
-        message(FATAL_ERROR "Failed building Emscripten port ${${port}}")
+        message(FATAL_ERROR "Failed building Emscripten port ${port}")
         return()
     endif()
 
-    if( ${port} STREQUAL sdl2 OR
-        ${port} STREQUAL sdl3
-    )
-        find_package(${${port}} REQUIRED CONFIG)
-    else()
-        message(STATUS "Add [compile+link] flags ${prefix}${${port}}")
+    find_package(${port} CONFIG QUIET)
+    if(NOT ${port}_FOUND)
+        add_compile_options(--use-port=${port})
+        add_link_options(--use-port=${port})
     endif()
+
+    set(${${name}}_FOUND TRUE PARENT_SCOPE)
 endfunction()
+
+add_compile_options(-Wno-experimental)
 
 include("${EMSCRIPTEN_ROOT}/cmake/Modules/Platform/Emscripten.cmake")
 if(EMSCRIPTEN_VERSION VERSION_LESS 6.0.1)

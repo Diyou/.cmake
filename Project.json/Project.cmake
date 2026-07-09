@@ -79,11 +79,17 @@ function(_LOAD_PROJECT_JSON_DEPENDENCIES)
         message("Removing '${DEPENDENCY}' ...")
         file(REMOVE_RECURSE "${DEPENDENCY_DIR}")
     endmacro()
-    
+
     include("${CMAKE_CURRENT_LIST_DIR}/Archive.cmake")
     include("${CMAKE_CURRENT_LIST_DIR}/Git.cmake")
 
     function(Parse)
+        if(EMSCRIPTEN)
+            UseEmscriptenPort(DEPENDENCY)
+            if(${DEPENDENCY}_FOUND)
+                return()
+            endif()
+        endif()
         GetJSON(JSON_deps "${DEPENDENCY}" JSON)
 
         # Shared variables
@@ -132,14 +138,20 @@ function(_LOAD_PROJECT_JSON_DEPENDENCIES)
 
         # Add subdirectory
         if(EXISTS "${DEPENDENCY_DIR}/CMakeLists.txt")
-            add_subdirectory("${DEPENDENCY_DIR}" EXCLUDE_FROM_ALL)
+            add_subdirectory("${DEPENDENCY_DIR}" ${DEPENDENCY} EXCLUDE_FROM_ALL)
         endif()
     endfunction()
 
+
+    set(PREFABS SDL3)
     foreach(DEPENDENCY ${dependencies})
-        list(APPEND CMAKE_MESSAGE_INDENT "[${DEPENDENCY}] ")
-        Parse()
-        list(POP_BACK CMAKE_MESSAGE_INDENT)
+        if(ANDROID AND DEPENDENCY IN_LIST PREFABS)
+            find_package(${DEPENDENCY} REQUIRED CONFIG)
+        else()
+            list(APPEND CMAKE_MESSAGE_INDENT "[${DEPENDENCY}] ")
+            Parse()
+            list(POP_BACK CMAKE_MESSAGE_INDENT)
+        endif()
     endforeach()
 endfunction()
 

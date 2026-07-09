@@ -23,6 +23,7 @@ macro(_COMMON_CONFIG)
 endmacro()
 cmake_language(DEFER CALL _COMMON_CONFIG)
 
+# Coming from gradle
 if(ANDROID)
     # Make the gradle files discoverable by the toplevel cmake project
     file(CREATE_LINK "${CMAKE_BINARY_DIR}"
@@ -62,7 +63,19 @@ execute_process(COMMAND adb shell getprop ro.product.cpu.abi
 
 # Fallback
 if(ANDROID_ABI_ERROR)
-    set(ANDROID_ABI x86_64)
+    if(DOTCMAKE_HOST_IS_ARM)
+        if(DOTCMAKE_HOST_IS_64BIT)
+            set(ANDROID_ABI arm64-v8a)
+        else()
+            set(ANDROID_ABI armeabi-v7a)
+        endif()
+    else()
+        if(DOTCMAKE_HOST_IS_64BIT)
+            set(ANDROID_ABI x86_64)
+        else()
+            set(ANDROID_ABI x86)
+        endif()
+    endif()
 endif()
 
 # configure and build single abi apk
