@@ -13,6 +13,21 @@ import std;
 using namespace std;
 constexpr string_view empty_view;
 
+template< string_view const &left, string_view const &right >
+consteval string
+concat()
+{
+  array< char, left.size() + right.size() > concatenated{};
+  size_t                                    index = 0;
+  for (auto character : left) {
+    concatenated[index++] = character;
+  }
+  for (auto character : right) {
+    concatenated[index++] = character;
+  }
+  return concatenated;
+}
+
 constexpr string_view
 strip_left(string_view const &view, string_view const &match)
 {
@@ -41,12 +56,15 @@ template< auto T >
 constexpr auto
 GetFunctionView()
 {
-  constexpr string_view match_left =
-    dotcmake::Compiler::GCC ? "[with auto T = " : "[T = &";
-  constexpr string_view match_right = ";]>";
+  constexpr string_view match_left = dotcmake::Compiler::GCC ? "[with auto T = "
+                                   : dotcmake::Compiler::MSVC
+                                     ? "GetFunctionView<"
+                                     : "[T = &";
+  constexpr string_view match_right = dotcmake::Compiler::MSVC ? ">(" : ";]>";
   constexpr string_view match_ns    = "::";
 
   string_view const     location = source_location::current().function_name();
+
   string_view const     stripped = strip(location, match_left, match_right);
   string_view const     without_namespace = strip_left(stripped, match_ns);
   return without_namespace.empty() ? stripped : without_namespace;

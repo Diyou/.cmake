@@ -1,0 +1,86 @@
+on:
+  workflow_call: 
+    inputs:
+      os:
+        default: linux
+        type: string
+        description: The target OS (linux|windows|macos|android|web)
+      config:
+        default: debug
+        type: string
+        description: The CMake build config (debug|release)
+      target:
+        default: ''
+        type: string
+        description: The CMake build target
+
+jobs:
+  build:
+    runs-on: >-
+      ${{
+        inputs.os == 'windows' && 'windows-2025'  ||
+        inputs.os == 'macos' && 'macos-26'      ||
+        'ubuntu-26.04'
+      }}
+
+    env:
+      PRESET: >-
+        ${{inputs.config}}${{
+          inputs.os == 'web' && '::emscripten'  ||
+          inputs.os == 'android' && '::android' ||
+          ''
+        }}
+      CMAKE_CONFIG:
+
+    steps:
+      - name: Prepare Windows
+        if: ${{ inputs.os == 'windows' }}
+        run: |
+          $vsPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * `
+            -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+
+          Import-Module "$vsPath\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"
+          Enter-VsDevShell -VsInstallPath $vsPath -SkipAutomaticLocation -DevCmdArguments "-arch=x64"
+
+          # Populate environment
+          Get-ChildItem env: | ForEach-Object {
+            "$($_.Name)=$($_.Value)" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          }
+
+      - name: Prepare macOS
+        if: ${{ inputs.os == 'macos' }}
+        run: |
+          LLVM=$(brew --prefix llvm@20)
+          echo "CC=$LLVM/bin/clang" >> $GITHUB_ENV
+          echo "CXX=$LLVM/bin/clang++" >> $GITHUB_ENV
+          CMAKE_CONFIG="\
+            -DCMAKE_OSX_SYSROOT=macosx                              \
+            -DCMAKE_CXX_COMPILER_ID_ARG1=-resource-dir=$LLVM/lib/c++\
+          "
+          echo "CMAKE_CONFIG=$CMAKE_CONFIG" >> $GITHUB_ENV
+
+      - name: Prepare emsdk
+        if: ${{ inputs.os == 'web' }}
+        uses: emscripten-core/setup-emsdk@v16
+        with:
+          actions-cache-folder: emsdk
+      
+      - name: Check versions
+        run: |
+          cmake --version
+          ninja --version
+
+      - uses: actions/checkout@v7
+        with:
+          path: ${{ github.repository == 'Diyou/.cmake' && '.cmake' || '.' }}
+          submodules: true
+
+      - name: Setup c++ Project
+        if: ${{ github.repository == 'Diyou/.cmake' }}
+        run: |
+          .cmake/setup c++
+
+      - name: Build
+        run: |
+          cmake --preset ${{env.PRESET}} ${{env.CMAKE_CONFIG}}
+          cmake --build --preset ${{env.PRESET}} ${{ inputs.target != '' && '--target' }} ${{inputs.target}}

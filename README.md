@@ -1,3 +1,8 @@
+[![Linux](https://github.com/Diyou/.cmake/actions/workflows/linux.yaml/badge.svg)](https://github.com/Diyou/.cmake/actions/workflows/linux.yaml)
+[![macOS](https://github.com/Diyou/.cmake/actions/workflows/macos.yaml/badge.svg)](https://github.com/Diyou/.cmake/actions/workflows/macos.yaml)
+[![Windows](https://github.com/Diyou/.cmake/actions/workflows/windows.yaml/badge.svg)](https://github.com/Diyou/.cmake/actions/workflows/windows.yaml)<br>
+[![Android](https://github.com/Diyou/.cmake/actions/workflows/android.yaml/badge.svg)](https://github.com/Diyou/.cmake/actions/workflows/android.yaml)
+[![Web](https://github.com/Diyou/.cmake/actions/workflows/emscripten.yaml/badge.svg)](https://github.com/Diyou/.cmake/actions/workflows/emscripten.yaml)
 # dotcmake
 
 CMake configuration suite for common multiplatform c++ projects
@@ -22,7 +27,7 @@ CMake configuration suite for common multiplatform c++ projects
 
 ## Requirement:
 
-- cmake > 4.0.0
+- cmake > 3.30
   - gcc > 15
   - clang > 19
 

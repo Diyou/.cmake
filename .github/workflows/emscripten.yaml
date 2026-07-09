@@ -1,0 +1,14 @@
+name: Browser emscripten
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ] 
+
+jobs:
+  call-build:
+    name: Build
+    uses: ./.github/workflows/.cmake.yaml
+    with:
+      os: web

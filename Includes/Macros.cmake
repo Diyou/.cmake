@@ -54,7 +54,7 @@ function(EXE name)
         OUTPUT_NAME main
     )
   else()
-    add_executable(${name} WIN32)
+    add_executable(${name})
     _add_sources(${name} ${ARGN})
     if(EMSCRIPTEN)
       set(EMSCRIPTEN_SHELL "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../ToolChains/EmscriptenShell.html")

@@ -3,7 +3,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/common.cmake)
 set(ENV{CC} clang)
 set(ENV{CXX} clang++)
 
-# Enable libc++ on Linux
+# Force libc++
 if(LINUX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ ")
+    string(APPEND CMAKE_CXX_FLAGS " -stdlib=libc++")
 endif()

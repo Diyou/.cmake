@@ -55,14 +55,17 @@ if(NOT EXISTS ${ANDROID_HOME})
 endif()
 
 # Retrieve the abi from the connected device
-execute_process(COMMAND adb shell getprop ro.product.cpu.abi
-    OUTPUT_VARIABLE ANDROID_ABI
-    ERROR_VARIABLE ANDROID_ABI_ERROR
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+find_program(adb adb)
+if(adb)
+    execute_process(COMMAND "${adb}" shell getprop ro.product.cpu.abi
+        OUTPUT_VARIABLE ANDROID_ABI
+        ERROR_VARIABLE ADB_ERROR
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+endif()
 
 # Fallback
-if(ANDROID_ABI_ERROR)
+if(NOT adb OR ADB_ERROR)
     if(DOTCMAKE_HOST_IS_ARM)
         if(DOTCMAKE_HOST_IS_64BIT)
             set(ANDROID_ABI arm64-v8a)
@@ -89,9 +92,10 @@ get_filename_component(INTERNAL_CACHE "${INTERNAL_CACHE_LINK}" REALPATH)
 
 execute_process(COMMAND
     ${./}gradlew
-        ${GRADLE_configureCMake}
+        ${GRADLE_configureCMake}[${ANDROID_ABI}]
     -Pandroid.injected.build.abi=${ANDROID_ABI}
-    --stacktrace
+    --quiet
+    #--stacktrace
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/Android
     RESULT_VARIABLE result
 )

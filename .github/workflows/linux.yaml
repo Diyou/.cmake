@@ -1,0 +1,12 @@
+name: Linux GCC
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ] 
+
+jobs:
+  call-build:
+    name: Build
+    uses: ./.github/workflows/.cmake.yaml

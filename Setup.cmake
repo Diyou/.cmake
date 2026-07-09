@@ -2,7 +2,7 @@
 # to install Templates
 # As a shorthand use the shell/bash scripts like:
 # .cmake/setup c++
-cmake_minimum_required(VERSION 3.29)
+cmake_minimum_required(VERSION 3.30)
 
 # Filter args beginning with CWD
 unset(ARGS)

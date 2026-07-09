@@ -49,7 +49,9 @@ android {
         externalNativeBuild {
             cmake {
                 arguments(
-                    "-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=${File(sourceRoot, ".cmake/ToolChains/android.cmake")}"
+                    "-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=${File(sourceRoot, ".cmake/ToolChains/android.cmake")}",
+                    "-DCMAKE_CXX_STANDARD_LIBRARY=libc++",
+                    "-Wno-dev"
                 )
             }
         }
