@@ -94,8 +94,6 @@ if(valid)
             if(res EQUAL 0)
                 set(clangd "${out}")
             endif()
-        else()
-            find_program(clangd clangd)
         endif()
     else()
         set(IntelliSenseEngine default)
@@ -110,6 +108,29 @@ if(valid)
     else()
         SetJSON(JSON clangd.path "")
     endif()
+
+    # Rebuild on save
+    set(runOnSaveMatch [["match":".(cpp|cxx|cppm|ixx)"]])
+    string(CONFIGURE [[{
+        "async": false,
+        "clearOutput": true,
+        "command": "cd '@CMAKE_BINARY_DIR@' && '@CMAKE_COMMAND@' -P '@CMAKE_CURRENT_LIST_DIR@/RebuildOnSave.cmake' '${file}'",
+        "runIn": "backend",
+        @runOnSaveMatch@
+    }]] runOnSave @ONLY)
+    if(clangd)
+        string(CONFIGURE [[@runOnSave@,{
+            "async": false,
+            "command":"clangd.restart",
+            "runIn": "vscode",
+            @runOnSaveMatch@
+        }]] runOnSave @ONLY)
+    endif()
+    string(CONFIGURE [[
+        [@runOnSave@]
+    ]] runOnSave @ONLY)
+    
+    SetJSON(JSON runOnSave.commands ${runOnSave})
 
     # Convenience settings
     SetJSON(JSON files.insertFinalNewline true)
